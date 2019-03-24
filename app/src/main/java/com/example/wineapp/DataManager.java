@@ -25,7 +25,6 @@ public class DataManager {
 // Constructors
 // ===================================================
 
-    //    Q: What is a Context Object
     public DataManager (Context context){
 //        Create an instance of the SQLiteHelper
         CustomSQLiteOpenHelper helper = new CustomSQLiteOpenHelper(context);

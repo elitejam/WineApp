@@ -24,15 +24,18 @@
         android:layout_below="@+id/editName"
         android:layout_alignLeft="@+id/editName"
         android:layout_alignStart="@+id/editName" />
+
     <Button
+        android:id="@+id/btnInsert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="INSERT"
-        android:id="@+id/btnInsert"
         android:layout_below="@+id/editAge"
-        android:layout_toRightOf="@+id/editSearch"
+        android:layout_marginStart="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="24dp"
         android:layout_toEndOf="@+id/editSearch"
-        android:layout_marginTop="24dp" />
+        android:layout_toRightOf="@+id/editSearch"
+        android:text="INSERT" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,14 +45,18 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="40dp" />
+
     <Button
+        android:id="@+id/btnSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SELECT *"
-        android:id="@+id/btnSelect"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/editName"
-        android:layout_alignEnd="@+id/editName" />
+        android:layout_above="@+id/returnToMain"
+        android:layout_alignStart="@+id/btnInsert"
+        android:layout_alignLeft="@+id/btnInsert"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginBottom="9dp"
+        android:text="SELECT *" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,4 +83,16 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:focusableInTouchMode="true" />
+
+    <Button
+        android:id="@+id/returnToMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="18dp"
+        android:text="Return" />
 </RelativeLayout>
