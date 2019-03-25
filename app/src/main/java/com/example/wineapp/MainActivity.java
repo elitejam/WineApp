@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Locale;
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
 //==============================================
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void loadWineListLayout() {
         setContentView(R.layout.wine_list);
 
-        // Wine list stuff
+        // *** wine list stuff ***
         RecyclerView wineList;
         RecyclerView.Adapter wineListAdapter;
 
@@ -127,13 +130,115 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         wineList.setLayoutManager(new LinearLayoutManager(this));
 
         // TODO: get dataset from DB instead
-        String[] data = new String[45];
+        Random rand = new Random();
+        String[] data = new String[200];
+
+        String[] name1 = new String[]{
+                "Red",
+                "Blue",
+                "Crimson",
+                "Pinot",
+                "Cabernet",
+                "Chateau",
+                "Reisling",
+                "Bordeaux",
+                "Moscato",
+                "Burgundy",
+                "White",
+                "New World",
+                "Old World",
+                "Chianti",
+                "Merlot",
+                "Malbec",
+                "Sparkling",
+                "Shiraz",
+                "Zinfandel"
+        };
+
+        String[] name1a = new String[] {
+                "Classic,",
+                "Whopping",
+                "Big",
+                "The",
+                "The Taco Bell",
+                "Wet",
+                "Poopy",
+                "The German",
+                "Shoe",
+                "Grandpa",
+                "Devil's"
+        };
+
+        String[] name2 = new String[]{
+                "Noir",
+                "Blanc",
+                "",
+                "Vintage",
+                "Sauvignon",
+                "Orange",
+                "Magnolia",
+                "Italia"
+        };
+
+        String[] name2a = new String[] {
+                "Mac",
+                "Philedelphia",
+                "Slunch",
+                "Buttpiss",
+                "Megalomania",
+                "Apocolypse",
+                "Hammer",
+                "Waffles",
+                "Steele",
+                "Special",
+                "Orange",
+                "Baseball",
+                "Meat",
+                "Garbage",
+                "Loud Noises"
+        };
+
         for (int i = 0; i < data.length; ++i) {
-            data[i] = "Wine" + i;
+            int year = rand.nextInt(219) + 1800;
+            double cost = 5 + Math.pow((2019 - year) / 3.0, 2);
+
+            String color;
+            switch (rand.nextInt(4)) {
+                case 0:
+                    color = "White";
+                    break;
+                case 1:
+                    color = "Pink";
+                    break;
+                case 2:
+                    color = "Amber";
+                    break;
+                default:
+                    color = "Red";
+                    break;
+            }
+
+            String cost_str = String.format(Locale.ENGLISH, "$%.2f", cost);
+
+            String wine_name;
+            if (rand.nextInt(100) == 0) {
+                wine_name = name1a[rand.nextInt(name1a.length)];
+            } else {
+                wine_name = name1[rand.nextInt(name1.length)];
+            }
+
+            wine_name += " ";
+            if (rand.nextInt(100) == 0) {
+                wine_name += name2a[rand.nextInt(name2a.length)];
+            } else {
+                wine_name += name2[rand.nextInt(name2.length)];
+            }
+
+            data[i] = String.format(Locale.ENGLISH, "#%-4d %s \n\n  %d | %10s\t | %s", i + 1, wine_name, year, cost_str, color);
         }
 
         // need wine list adapter (class that feeds list view information)
-        wineListAdapter = new WineListAdapter(data);
+        wineListAdapter = new WineListAdapter(data, this);
         wineList.setAdapter(wineListAdapter);
     }
 }
