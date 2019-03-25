@@ -3,6 +3,8 @@ package com.example.wineapp;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -112,9 +114,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void loadWineListLayout() {
         setContentView(R.layout.wine_list);
 
-        // replace when implementing DB access
-        int num_entries = 30;
+        // Wine list stuff
+        RecyclerView wineList;
+        RecyclerView.Adapter wineListAdapter;
 
-        // TODO: programmatically add wine list entries
+        // create WineList recycle view
+        wineList = findViewById(R.id.wineList);
+
+        // improves performance if you know changes in content does not change layout size
+        wineList.setHasFixedSize(true);
+
+        wineList.setLayoutManager(new LinearLayoutManager(this));
+
+        // TODO: get dataset from DB instead
+        String[] data = new String[45];
+        for (int i = 0; i < data.length; ++i) {
+            data[i] = "Wine" + i;
+        }
+
+        // need wine list adapter (class that feeds list view information)
+        wineListAdapter = new WineListAdapter(data);
+        wineList.setAdapter(wineListAdapter);
     }
 }
