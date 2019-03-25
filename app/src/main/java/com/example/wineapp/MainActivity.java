@@ -14,7 +14,16 @@ import android.widget.Toast;
 import java.util.Locale;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements
+        View.OnClickListener,
+        WineListAdapter.OnWineListener,
+        DetailFragment.OnDetailSelectListener
+        {
+    private static final String TAG = "MainActivity";
+    private String[] data;
+
+    // Fragments
+    private DetailFragment detailFragment;
 
 //==============================================
 //    For Database layout
@@ -131,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // TODO: get dataset from DB instead
         Random rand = new Random();
-        String[] data = new String[200];
+        data = new String[200];
 
         String[] name1 = new String[]{
                 "Red",
@@ -238,7 +247,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         // need wine list adapter (class that feeds list view information)
-        wineListAdapter = new WineListAdapter(data, this);
+        wineListAdapter = new WineListAdapter(data, this, this);
         wineList.setAdapter(wineListAdapter);
+    }
+
+    /* Implement OnWineClickListener interface. Takes position Int as argument.
+     *
+     */
+    @Override
+    public void onWineClick(int position) {
+        String info = data[position];
+        Log.d(TAG, "onWineClick: " + info);
+        onDetailSelected(info);
+    }
+
+    /* Implement OnDetailSelectedListener for DetailFragment.
+     *
+     */
+    @Override
+    public void onDetailSelected(String info) {
+        detailFragment = DetailFragment.newInstance(info);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.contentWindow, detailFragment, "DetailFragment")
+                .addToBackStack(null)
+                .commit();
     }
 }

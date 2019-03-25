@@ -4,4 +4,7 @@
     <string name="showWineDatabaseButtonText">Wine Database</string>
     <string name="optionMenuText">Option Menu</string>
     <string name="BackToMainViewButtonText">Back to Main View</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
