@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         dm = new DataManager(this);
     }
+
     @Override
     public void onClick(View v){
         switch(v.getId()){
@@ -57,6 +59,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.returnToMain:
                 loadMainLayout();
                 break;
+            case R.id.showWineListButton:
+                loadWineListLayout();
+                break;
+            case R.id.backToMainViewButton:
+                loadMainLayout();
+                break;
+            case R.id.addWineButton:
+                Log.w("MainActivity.onClick", "addWineButton NOT IMPLEMENTED!");
+                Toast.makeText(this, "IMPLEMENT ME", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
@@ -68,11 +80,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.i(c.getString(1), c.getString(2));
         }
     }
+
     public void loadMainLayout(){
         setContentView(R.layout.activity_main);
         btnDatabaseOpen = findViewById(R.id.databaseOpen);
         btnDatabaseOpen.setOnClickListener(this);
     }
+
     public void loadDBLayout(){
         setContentView(R.layout.database_entry);
         // get a reference to the UI item
@@ -95,4 +109,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnReturnToMain.setOnClickListener(this);
     }
 
+    public void loadWineListLayout() {
+        setContentView(R.layout.wine_list);
+
+        // replace when implementing DB access
+        int num_entries = 30;
+
+        // TODO: programmatically add wine list entries
+    }
 }

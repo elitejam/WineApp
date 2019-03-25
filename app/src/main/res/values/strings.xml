@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WineApp</string>
+    <string name="showWineListButtonText">Wine List</string>
+    <string name="showWineDatabaseButtonText">Wine Database</string>
+    <string name="optionMenuText">Option Menu</string>
+    <string name="BackToMainViewButtonText">Back to Main View</string>
 </resources>
