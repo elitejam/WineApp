@@ -50,6 +50,10 @@ public class MainActivity extends AppCompatActivity implements
         loadMainLayout();
 
         dm = new DataManager(this);
+
+        // TODO: delete this when not needed anymore
+        Wine testWine = new Wine(0, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord");
+        Log.i("Wine test", testWine.toString());
     }
 
     @Override
