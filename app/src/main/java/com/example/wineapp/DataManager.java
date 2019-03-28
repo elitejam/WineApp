@@ -55,6 +55,9 @@ public class DataManager {
         tableRowProps.add(TABLE_ROW_COLOR_DEF);
         Log.i("Column size: ", Integer.toString(tableRowNames.size()));
 
+        // Deletes the database so that it is always compatible
+//        TODO: Remove when database is more stable
+        context.deleteDatabase(DB_NAME);
 //        Create an instance of the SQLiteHelper
         CustomSQLiteOpenHelper helper = new CustomSQLiteOpenHelper(context);
         db = helper.getWritableDatabase();
@@ -91,19 +94,46 @@ public class DataManager {
     }
 
     //    Insert into DB
-    public void insert (String name, String age){
+    public void insert (String name, String brand){
         String query = "INSERT INTO " + TABLE_WINE + " (" +
                 TABLE_ROW_NAME + ", " +
                 TABLE_ROW_BRAND + " ) " +
                 "VALUES (" +
                 "'" + name + "'" + ", " +
-                "'" + age + "'" + ");";
+                "'" + brand + "'" + ");";
         // Print Statement
         Log.i("insert() = ", query);
 
         // Execute command
         db.execSQL(query);
     }
+
+    //    Parse Flex command into DB
+    public void parse_flex (String flexStr){
+
+//        Log.i("parse_flex: ", flexStr);
+
+        String[] arrString       = flexStr.split("//");
+        List<String> columnNames = new ArrayList<String>();
+        List<String> contents    = new ArrayList<String>();
+
+        for(int i = 0; i < arrString.length; i++ ){
+//            Log.i("arrString: ", arrString[i]);
+
+            String[] subStr = arrString[i].trim().split(" ", 2);
+
+//            Log.i("subStr[0]: ", subStr[0].trim());
+//            Log.i("subStr[1]: ", subStr[1].trim());
+
+            columnNames.add(subStr[0].trim());
+            contents.add(subStr[1].trim());
+        }
+        Log.i("Names: ", columnNames.toString());
+        Log.i("Contents: ", contents.toString());
+
+        insert_flex(columnNames, contents);
+    }
+
     //    Insert into DB
     public void insert_flex (List<String> columnNames, List<String> contents){
         String query = "INSERT INTO " + TABLE_WINE + " ( ";
@@ -114,11 +144,17 @@ public class DataManager {
             contentCols += columnNames.get(i) + ", ";
             contentVals += "'" + contents.get(i) + "'" + ", ";
         }
+        contentCols = contentCols.trim();
+        contentVals = contentVals.trim();
+
+        Log.i("Names: ", contentCols.substring(0, contentCols.length()-1));
+        Log.i("Contents: ", contentVals.substring(0, contentVals.length()-1));
+
 
         query += contentCols.substring(0, contentCols.length()-1) + " ) "
-                    + "VALUES (" 
+                    + "VALUES ("
                     + contentVals.substring(0, contentVals.length()-1) + ");";
-                    
+
         // Print Statement
         Log.i("insert() = ", query);
 
@@ -135,6 +171,22 @@ public class DataManager {
         Log.i("delete(); = ", query);
         db.execSQL(query);
     }
+
+    public void checkCols(){
+        Log.i("checking ", "derp");
+//        Cursor c = db.rawQuery("PRAGMA table_info(table_name);", null);
+        Cursor dbCursor = db.query(TABLE_WINE,null,null,null,null,null,null);
+        String[] columnNames =dbCursor.getColumnNames();
+        String debug = "[";
+        for(int i = 0; i < columnNames.length; i++ ) {
+            debug += columnNames[i] + ", ";
+        }
+        debug += "]";
+
+        Log.i("ColNames: ", debug);
+//        return c;
+    }
+
 
     //    Get all the records
     public Cursor selectAll() {
