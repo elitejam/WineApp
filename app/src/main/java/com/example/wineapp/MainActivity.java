@@ -32,10 +32,12 @@ public class MainActivity extends AppCompatActivity implements
     Button btnDelete;
     Button btnSelect;
     Button btnSearch;
+    Button btnDebug;
     EditText editName;
     EditText editAge;
     EditText editDelete;
     EditText editSearch;
+    EditText debugField;
     // This is our DataManager instance
     DataManager dm;
     Button btnReturnToMain;
@@ -67,6 +69,12 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.btnSearch:
                 showData(dm.searchName(editSearch.getText().toString()));
+                break;
+            case R.id.btnDebug:
+                dm.checkCols();
+//                showData(dm.checkCols());
+//                dm.parse_flex(debugField.getText().toString());
+//                dm.parse_flex("name Chateau Berliquet 2015 // brand Bordeaux Red Blends // rating 4.5 // cost 39.99 // color Red");
                 break;
             case R.id.btnDelete:
                 dm.delete(editDelete.getText().toString());
@@ -112,18 +120,21 @@ public class MainActivity extends AppCompatActivity implements
         btnDelete = findViewById(R.id.btnDelete);
         btnSelect = findViewById(R.id.btnSelect);
         btnSearch = findViewById(R.id.btnSearch);
+        btnDebug = findViewById(R.id.btnDebug);
         btnReturnToMain = findViewById(R.id.returnToMain);
 
         editName   =  findViewById(R.id.editName);
         editAge    =  findViewById(R.id.editAge);
         editDelete =  findViewById(R.id.editDelete);
         editSearch =  findViewById(R.id.editSearch);
+        debugField   =  findViewById(R.id.debugField);
 
         // Register MainActivity as a listener
         btnSelect.setOnClickListener(this);
         btnInsert.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         btnSearch.setOnClickListener(this);
+        btnDebug.setOnClickListener(this);
         btnReturnToMain.setOnClickListener(this);
     }
 
