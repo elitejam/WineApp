@@ -12,7 +12,7 @@ import android.widget.TextView;
 public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineListEntry> {
     private String[] dataset_;
     private Context context_;
-    private View.OnClickListener handler_;
+    private WineDetailFragment.OnDetailSelectListener handler_;
 
     // ---------------------------------------------------------------------------------------------
     // Define the widget that goes in the Wine List recycler list view
@@ -20,13 +20,11 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
     public static class WineListEntry extends RecyclerView.ViewHolder implements View.OnClickListener {
         // TODO: use a string for now; switch to horizontal linear layout later?
         private TextView contents_;
-        private View wine_list_widget_;
-        private View.OnClickListener handler_;
+        private WineDetailFragment.OnDetailSelectListener handler_;
 
-        public WineListEntry(TextView v, View wine_list_widget, View.OnClickListener handler) {
+        public WineListEntry(TextView v, WineDetailFragment.OnDetailSelectListener handler) {
             super(v);
             this.contents_ = v;
-            this.wine_list_widget_= wine_list_widget;
             this.handler_ = handler;
 
             // make each wine list entry clickable
@@ -38,18 +36,15 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
          */
         @Override
         public void onClick(View view) {
-            // set tag of wine list widget to wine id to show detail (wine id is adapter position)
-            this.wine_list_widget_.setTag(this.getAdapterPosition());
-
             // pass the click event onto the provided handler
-            this.handler_.onClick(this.wine_list_widget_);
+            this.handler_.onDetailSelected(this.getAdapterPosition());
         }
     }
 
     // ---------------------------------------------------------------------------------------------
     // RecyclerView implementation
     // ---------------------------------------------------------------------------------------------
-    public WineListAdapter(String[] data, Context context, View.OnClickListener handler) {
+    public WineListAdapter(String[] data, Context context, WineDetailFragment.OnDetailSelectListener handler) {
         this.dataset_ = data;
         this.context_ = context;
         this.handler_ = handler;
@@ -70,7 +65,7 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
         v.setLayoutParams(p);
         v.setTypeface(Typeface.MONOSPACE);
 
-        return new WineListEntry(v, parent, this.handler_);
+        return new WineListEntry(v, this.handler_);
     }
 
     @Override
