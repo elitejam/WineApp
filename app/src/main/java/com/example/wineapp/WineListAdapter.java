@@ -12,19 +12,24 @@ import android.widget.TextView;
 public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineListEntry> {
     private String[] dataset_;
     private Context context_;
-    private OnWineListener onWineListener_;
+    private View.OnClickListener handler_;
 
     // ---------------------------------------------------------------------------------------------
     // Define the widget that goes in the Wine List recycler list view
     // ---------------------------------------------------------------------------------------------
-    public static class WineListEntry extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class WineListEntry extends RecyclerView.ViewHolder implements View.OnClickListener {
         // TODO: use a string for now; switch to horizontal linear layout later?
-        public TextView contents;
-        private OnWineListener onWineListener;
-        public WineListEntry(TextView v, OnWineListener onWineListener) {
+        private TextView contents_;
+        private View wine_list_widget_;
+        private View.OnClickListener handler_;
+
+        public WineListEntry(TextView v, View wine_list_widget, View.OnClickListener handler) {
             super(v);
-            this.contents = v;
-            this.onWineListener = onWineListener;
+            this.contents_ = v;
+            this.wine_list_widget_= wine_list_widget;
+            this.handler_ = handler;
+
+            // make each wine list entry clickable
             v.setOnClickListener(this);
         }
 
@@ -33,49 +38,55 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
          */
         @Override
         public void onClick(View view) {
-            onWineListener.onWineClick(getAdapterPosition());
+            // set tag of wine list widget to wine id to show detail (wine id is adapter position)
+            this.wine_list_widget_.setTag(this.getAdapterPosition());
+
+            // pass the click event onto the provided handler
+            this.handler_.onClick(this.wine_list_widget_);
         }
     }
 
-    public WineListAdapter(String[] data, Context context, OnWineListener onWineListener) {
+    // ---------------------------------------------------------------------------------------------
+    // RecyclerView implementation
+    // ---------------------------------------------------------------------------------------------
+    public WineListAdapter(String[] data, Context context, View.OnClickListener handler) {
         this.dataset_ = data;
         this.context_ = context;
-        this.onWineListener_ = onWineListener;
+        this.handler_ = handler;
     }
 
     @Override
     public WineListAdapter.WineListEntry onCreateViewHolder(ViewGroup parent, int viewType) {
-        // apparently the view has to be created outside the viewholder...
+        // apparently the view has to be created outside the view-holder...
         TextView v = new TextView(parent.getContext());
 
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
 
         v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f);
         v.setPadding(10, 20, 10, 15);
         v.setLayoutParams(p);
         v.setTypeface(Typeface.MONOSPACE);
 
-        // Passes OnWineListener
-        return new WineListEntry(v, onWineListener_);
+        return new WineListEntry(v, parent, this.handler_);
     }
 
     @Override
     public void onBindViewHolder(WineListEntry entry, int position) {
-        entry.contents.setText(this.dataset_[position]);
+        // TODO: this will be more complicated when we use more than a TextView
+        entry.contents_.setText(this.dataset_[position]);
 
         if (position % 2 == 1) {
-            entry.contents.setBackgroundColor(this.context_.getResources().getColor(R.color.colorWineListRowBackgroundDark));
+            entry.contents_.setBackgroundColor(this.context_.getResources().getColor(R.color.colorWineListRowBackgroundDark));
         } else {
-            entry.contents.setBackgroundColor(this.context_.getResources().getColor(R.color.colorWineListBackgroundLight));
+            entry.contents_.setBackgroundColor(this.context_.getResources().getColor(R.color.colorWineListBackgroundLight));
         }
     }
 
     @Override
     public int getItemCount() {
         return this.dataset_.length;
-    }
-
-    public interface OnWineListener {
-        void onWineClick(int position);
     }
 }
