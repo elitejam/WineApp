@@ -4,15 +4,19 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddWineFragment.OnFragmentInteractionListener} interface
+ * {@link AddWineFragment.OnAddWineListener} interface
  * to handle interaction events.
  * Use the {@link AddWineFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -27,7 +31,11 @@ public class AddWineFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnAddWineListener mListener;
+
+    private EditText nameEditText;
+    private EditText yearEditText;
+    private Button addWineButton;
 
     public AddWineFragment() {
         // Required empty public constructor
@@ -42,11 +50,9 @@ public class AddWineFragment extends Fragment {
      * @return A new instance of fragment AddWineFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddWineFragment newInstance(String param1, String param2) {
+    public static AddWineFragment newInstance() {
         AddWineFragment fragment = new AddWineFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,21 +70,40 @@ public class AddWineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_wine, container, false);
+        View rootView =  inflater.inflate(R.layout.fragment_add_wine, container, false);
+
+        addWineButton = rootView.findViewById(R.id.addWineButton);
+        nameEditText = rootView.findViewById(R.id.name);
+        yearEditText = rootView.findViewById(R.id.year);
+        yearEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        addWineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = nameEditText.getText().toString();
+                String year = yearEditText.getText().toString();
+                Toast.makeText(
+                        getActivity(),
+                        "ADDING WINE: " + name + " " + year + " beep boop...",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+            }
+        });
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onAddWine();
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnAddWineListener) {
+            mListener = (OnAddWineListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -101,8 +126,8 @@ public class AddWineFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnAddWineListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onAddWine();
     }
 }

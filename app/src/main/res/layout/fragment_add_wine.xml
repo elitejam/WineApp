@@ -4,13 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".AddWineFragment">
+    tools:context=".AddWineFragment"
+    android:clickable="true"
+    android:elevation="20dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
     <EditText
         android:id="@+id/name"
@@ -18,18 +15,22 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"/>
+        android:layout_marginEnd="16dp"
+        android:hint="name"/>
 
     <EditText
         android:id="@+id/year"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:layout_alignParentTop="true"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"/>
+        android:layout_marginTop="66dp"
+        android:layout_marginEnd="16dp"
+        android:hint="year"
+        android:textColor="@android:color/black" />
 
     <Button
-        android:id="@+id/add_button"
+        android:id="@+id/addWineButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
