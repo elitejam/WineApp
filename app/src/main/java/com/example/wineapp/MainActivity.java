@@ -5,16 +5,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Locale;
 import java.util.Random;
@@ -95,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.addWineButton:
                 Log.w("MainActivity.onClick", "addWineButton NOT IMPLEMENTED!");
-//                Toast.makeText(this, "IMPLEMENT ME", Toast.LENGTH_SHORT).show();
                 onAddWine();
                 break;
         }
@@ -269,17 +263,6 @@ public class MainActivity extends AppCompatActivity implements
         wineList.setAdapter(wineListAdapter);
     }
 
-    private void setViewEnable(View view, boolean enabled) {
-        view.setEnabled(enabled);
-        if (view instanceof ViewGroup) {
-            ViewGroup viewGroup = (ViewGroup) view;
-            for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                View child = viewGroup.getChildAt(i);
-                setViewEnable(child, enabled);
-            }
-        }
-    }
-
     /* Implement OnDetailSelectedListener for WineDetailFragment.
      *
      */
@@ -293,30 +276,6 @@ public class MainActivity extends AppCompatActivity implements
             .commit();
 
         Log.d(TAG, "onWineClick: " + info);
-
-        // disable scrolling of RecyclerView
-        RecyclerView winelist = findViewById(R.id.wineList);
-        LinearLayoutManagerScrollEnable lm = (LinearLayoutManagerScrollEnable) winelist.getLayoutManager();
-        lm.setScrollEnable(false);
-
-        // disable all widgets underneath detail view
-        this.setViewEnable(findViewById(R.id.mainContentLayout), false);
-        this.setViewEnable(findViewById(R.id.backToMainViewButton), false);
-    }
-
-    /* Implement OnDetailDetached for WineDetailFragment
-     *
-     */
-    @Override
-    public void onDetailDetached() {
-        // re-enable views that were underneath the frame layout
-        this.setViewEnable(findViewById(R.id.mainContentLayout), true);
-        this.setViewEnable(findViewById(R.id.backToMainViewButton), true);
-
-        // re-enable RecyclerView scrolling
-        RecyclerView winelist = findViewById(R.id.wineList);
-        LinearLayoutManagerScrollEnable lm = (LinearLayoutManagerScrollEnable) winelist.getLayoutManager();
-        lm.setScrollEnable(true);
     }
 
     /* Implement OnAddWineListener for AddWineFragment.

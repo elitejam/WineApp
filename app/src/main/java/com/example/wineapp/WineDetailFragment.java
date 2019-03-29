@@ -76,8 +76,6 @@ public class WineDetailFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
-        mListener.onDetailDetached();
         mListener = null;
     }
 
@@ -93,6 +91,5 @@ public class WineDetailFragment extends Fragment {
      */
     public interface OnDetailSelectListener {
         void onDetailSelected(int wine_id);
-        void onDetailDetached();
     }
 }
