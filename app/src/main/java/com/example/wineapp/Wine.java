@@ -154,7 +154,7 @@ public class Wine {
 
     /**
      * Grape type setter
-     * @param grape_type
+     * @param grape_type type of grape
      */
     public void grape_type(String grape_type) {
         this.grape_type = grape_type;

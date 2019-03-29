@@ -12,8 +12,8 @@ import android.widget.TextView;
 public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineListEntry> {
     private String[] dataset_;
     private Context context_;
-    // Global OnWineListener
     private OnWineListener onWineListener_;
+
     // ---------------------------------------------------------------------------------------------
     // Define the widget that goes in the Wine List recycler list view
     // ---------------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
         v.setLayoutParams(p);
         v.setTypeface(Typeface.MONOSPACE);
 
-        // Passes OnWIneListener
+        // Passes OnWineListener
         return new WineListEntry(v, onWineListener_);
     }
 
