@@ -1,14 +1,19 @@
 package com.example.wineapp;
 
 import android.database.Cursor;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Locale;
@@ -16,14 +21,11 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener,
-        WineListAdapter.OnWineListener,
-        DetailFragment.OnDetailSelectListener
-        {
+        WineDetailFragment.OnDetailSelectListener,
+        AddWineFragment.OnAddWineListener
+{
     private static final String TAG = "MainActivity";
     private String[] data;
-
-    // Fragments
-    private DetailFragment detailFragment;
 
 //==============================================
 //    For Database layout
@@ -95,7 +97,8 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.addWineButton:
                 Log.w("MainActivity.onClick", "addWineButton NOT IMPLEMENTED!");
-                Toast.makeText(this, "IMPLEMENT ME", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "IMPLEMENT ME", Toast.LENGTH_SHORT).show();
+                onAddWine();
                 break;
         }
     }
@@ -154,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements
         // improves performance if you know changes in content does not change layout size
         wineList.setHasFixedSize(true);
 
-        wineList.setLayoutManager(new LinearLayoutManager(this));
+        wineList.setLayoutManager(new LinearLayoutManagerScrollEnable(this));
 
         // TODO: get dataset from DB instead
         Random rand = new Random();
@@ -269,25 +272,72 @@ public class MainActivity extends AppCompatActivity implements
         wineList.setAdapter(wineListAdapter);
     }
 
-    /* Implement OnWineClickListener interface. Takes position Int as argument.
-     *
-     */
-    @Override
-    public void onWineClick(int position) {
-        String info = data[position];
-        Log.d(TAG, "onWineClick: " + info);
-        onDetailSelected(info);
+    private void setViewEnable(View view, boolean enabled) {
+        view.setEnabled(enabled);
+        if (view instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) view;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                View child = viewGroup.getChildAt(i);
+                setViewEnable(child, enabled);
+            }
+        }
     }
 
-    /* Implement OnDetailSelectedListener for DetailFragment.
+    /* Implement OnDetailSelectedListener for WineDetailFragment.
      *
      */
     @Override
-    public void onDetailSelected(String info) {
-        detailFragment = DetailFragment.newInstance(info);
+    public void onDetailSelected(int wine_id) {
+        String info = this.data[wine_id];
+        WineDetailFragment detailFragment = WineDetailFragment.newInstance(info);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.contentWindow, detailFragment, "DetailFragment")
-                .addToBackStack(null)
-                .commit();
+            .add(R.id.wineListContentWindow, detailFragment, "DetailFragment")
+            .addToBackStack(null)
+            .commit();
+
+        Log.d(TAG, "onWineClick: " + info);
+
+        // disable scrolling of RecyclerView
+        RecyclerView winelist = findViewById(R.id.wineList);
+        LinearLayoutManagerScrollEnable lm = (LinearLayoutManagerScrollEnable) winelist.getLayoutManager();
+        lm.setScrollEnable(false);
+
+        // disable all widgets underneath detail view
+        this.setViewEnable(findViewById(R.id.mainContentLayout), false);
+        this.setViewEnable(findViewById(R.id.backToMainViewButton), false);
+    }
+
+    /* Implement OnDetailDetached for WineDetailFragment
+     *
+     */
+    @Override
+    public void onDetailDetached() {
+        // re-enable views that were underneath the frame layout
+        this.setViewEnable(findViewById(R.id.mainContentLayout), true);
+        this.setViewEnable(findViewById(R.id.backToMainViewButton), true);
+
+        // re-enable RecyclerView scrolling
+        RecyclerView winelist = findViewById(R.id.wineList);
+        LinearLayoutManagerScrollEnable lm = (LinearLayoutManagerScrollEnable) winelist.getLayoutManager();
+        lm.setScrollEnable(true);
+    }
+
+    /* Implement OnAddWineListener for AddWineFragment.
+     *
+     */
+    @Override
+    public void onAddWine() {
+        AddWineFragment addWineFragment = AddWineFragment.newInstance();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(
+                R.anim.enter_from_bottom,
+                R.anim.exit_from_top,
+                R.anim.enter_from_bottom,
+                R.anim.exit_from_top
+        );
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.add(R.id.wineListContentWindow, addWineFragment, "AddWineFragment").commit();
+
     }
 }

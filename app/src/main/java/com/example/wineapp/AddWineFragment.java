@@ -4,33 +4,40 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link DetailFragment.OnFragmentInteractionListener} interface
+ * {@link AddWineFragment.OnAddWineListener} interface
  * to handle interaction events.
- * Use the {@link DetailFragment#newInstance} factory method to
+ * Use the {@link AddWineFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DetailFragment extends Fragment {
+public class AddWineFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-//    private String name = "name";
-//    private String year = "year";
+    private String mParam1;
+    private String mParam2;
 
-    private OnDetailSelectListener mListener;
+    private OnAddWineListener mListener;
 
-    public DetailFragment() {
+    private EditText nameEditText;
+    private EditText yearEditText;
+    private Button addWineButton;
+
+    public AddWineFragment() {
         // Required empty public constructor
     }
 
@@ -40,14 +47,12 @@ public class DetailFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment DetailFragment.
+     * @return A new instance of fragment AddWineFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DetailFragment newInstance(String info) {
-        DetailFragment fragment = new DetailFragment();
+    public static AddWineFragment newInstance() {
+        AddWineFragment fragment = new AddWineFragment();
         Bundle args = new Bundle();
-        args.putString("info", info);
-
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,8 +61,8 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-//            mParam1 = getArguments().getString("name");
-//            mParam2 = getArguments().getString("year");
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -65,30 +70,40 @@ public class DetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        View rootView =  inflater.inflate(R.layout.fragment_add_wine, container, false);
 
-        Bundle bundle = this.getArguments();
+        addWineButton = rootView.findViewById(R.id.addWineButton);
+        nameEditText = rootView.findViewById(R.id.name);
+        yearEditText = rootView.findViewById(R.id.year);
+        yearEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        addWineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = nameEditText.getText().toString();
+                String year = yearEditText.getText().toString();
+                Toast.makeText(
+                        getActivity(),
+                        "ADDING WINE: " + name + " " + year + " beep boop...",
+                        Toast.LENGTH_SHORT
+                ).show();
 
-        if (bundle != null) {
-            TextView info = (TextView) rootView.findViewById(R.id.info);
-            info.setText(bundle.getString("info"));
-        }
-
+            }
+        });
         return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(String s) {
+    public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onDetailSelected(s);
+            mListener.onAddWine();
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnDetailSelectListener) {
-            mListener = (OnDetailSelectListener) context;
+        if (context instanceof OnAddWineListener) {
+            mListener = (OnAddWineListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -111,8 +126,8 @@ public class DetailFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnDetailSelectListener {
+    public interface OnAddWineListener {
         // TODO: Update argument type and name
-        void onDetailSelected(String info);
+        void onAddWine();
     }
 }
