@@ -107,7 +107,28 @@ public class DataManager {
         // Execute command
         db.execSQL(query);
     }
+    //    Insert into DB
+    public void insertWine (Wine wine){
+        List<String> columnNames = new ArrayList<String>();
+        List<String> contents = new ArrayList<String>();
+//        columnNames.add(TABLE_ROW_ID);
+        columnNames.add(TABLE_ROW_NAME);
+        columnNames.add(TABLE_ROW_BRAND);
+//        columnNames.add(TABLE_ROW_RATING);
+        columnNames.add(TABLE_ROW_COST);
+//        columnNames.add(TABLE_ROW_COLOR);
 
+        // TODO: Cant set id (auto-incrementing)
+//        contents.add(wine.id().toString());
+        contents.add(wine.name());
+        contents.add(wine.brand());
+        // TODO: Rating field needs to be added
+//        wine.rating();
+        contents.add(Double.toString(wine.cost()));
+        // TODO: How to convert enum into String?
+//        wine.color();
+        insert_flex(columnNames, contents);
+    }
     //    Parse Flex command into DB
     public void parse_flex (String flexStr){
 
@@ -173,10 +194,10 @@ public class DataManager {
     }
 
     public void checkCols(){
-        Log.i("checking ", "derp");
+//        Log.i("checking ", "derp");
 //        Cursor c = db.rawQuery("PRAGMA table_info(table_name);", null);
         Cursor dbCursor = db.query(TABLE_WINE,null,null,null,null,null,null);
-        String[] columnNames =dbCursor.getColumnNames();
+        String[] columnNames = dbCursor.getColumnNames();
         String debug = "[";
         for(int i = 0; i < columnNames.length; i++ ) {
             debug += columnNames[i] + ", ";
@@ -184,7 +205,6 @@ public class DataManager {
         debug += "]";
 
         Log.i("ColNames: ", debug);
-//        return c;
     }
 
 

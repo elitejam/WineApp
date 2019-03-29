@@ -71,7 +71,9 @@ public class MainActivity extends AppCompatActivity implements
                 showData(dm.searchName(editSearch.getText().toString()));
                 break;
             case R.id.btnDebug:
-                dm.checkCols();
+                Wine testWine = new Wine(0, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord");
+                dm.insertWine(testWine);
+//                dm.checkCols();
 //                showData(dm.checkCols());
 //                dm.parse_flex(debugField.getText().toString());
 //                dm.parse_flex("name Chateau Berliquet 2015 // brand Bordeaux Red Blends // rating 4.5 // cost 39.99 // color Red");
@@ -103,7 +105,8 @@ public class MainActivity extends AppCompatActivity implements
 //        Moves cursor to next row
         while (c.moveToNext()){
 //            Gets String at specified column
-            Log.i(c.getString(1), c.getString(2));
+            Log.i(c.getString(0), c.getString(1) + ", " + c.getString(2) + ", "
+                 + c.getString(3) + ", " + c.getString(4) + ", " + c.getString(5));
         }
     }
 
