@@ -1,6 +1,8 @@
 package com.example.wineapp;
 
 import android.database.Cursor;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +19,7 @@ import android.widget.Toast;
 import java.util.Locale;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AddWineFragment.OnAddWineListener {
     private static final String TAG = "MainActivity";
     private String[] data;
 
@@ -89,7 +91,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.addWineButton:
                 Log.w("MainActivity.onClick", "addWineButton NOT IMPLEMENTED!");
-                Toast.makeText(this, "IMPLEMENT ME", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "IMPLEMENT ME", Toast.LENGTH_SHORT).show();
+                onAddWine();
                 break;
             case R.id.wineList:
                 // we get this view when someone clicks on a wine list entry
@@ -304,5 +307,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 setViewEnable(child, enabled);
             }
         }
+    }
+
+    /* Implement OnAddWineListener for AddWineFragment.
+     *
+     */
+    @Override
+    public void onAddWine() {
+        AddWineFragment addWineFragment = AddWineFragment.newInstance();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(
+                R.anim.enter_from_bottom,
+                R.anim.exit_from_top,
+                R.anim.enter_from_bottom,
+                R.anim.exit_from_top
+        );
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.add(R.id.wineListContentWindow, addWineFragment, "AddWineFragment").commit();
+
     }
 }
