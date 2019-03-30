@@ -93,6 +93,105 @@ public class DataManager {
         }
     }
 
+//    ============================================================================================
+//    Required Functions
+//    ============================================================================================
+//    Insert into DB
+public void insertWine (Wine wine){
+    List<String> columnNames = new ArrayList<String>();
+    List<String> contents = new ArrayList<String>();
+//        columnNames.add(TABLE_ROW_ID);
+    columnNames.add(TABLE_ROW_NAME);
+    columnNames.add(TABLE_ROW_BRAND);
+//        columnNames.add(TABLE_ROW_RATING);
+    columnNames.add(TABLE_ROW_COST);
+    columnNames.add(TABLE_ROW_COLOR);
+
+    // TODO: Cant set id (auto-incrementing)
+//        contents.add(wine.id().toString());
+    contents.add(wine.name());
+    contents.add(wine.brand());
+    // TODO: Rating field needs to be added
+//        wine.rating();
+    contents.add(Double.toString(wine.cost()));
+    // TODO: How to convert enum into String?
+    contents.add(wine.color().toString());
+    insert_flex(columnNames, contents);
+}
+
+    //    Deletes an entry
+    public void delete(String name){
+        String query = "DELETE FROM " + TABLE_WINE +
+                " WHERE " + TABLE_ROW_NAME +
+                " = '" + name + "';";
+
+        Log.i("delete(); = ", query);
+        db.execSQL(query);
+    }
+
+    //    Get all the records
+    public Cursor selectAll() {
+        Cursor c = db.rawQuery("SELECT *" + " from " +
+                TABLE_WINE, null);
+        return c;
+    }
+
+//    //    Find a specific record
+//    public Cursor find (List<String> columnNames, List<String> contents){
+
+//        String query = "SELECT " +
+//                TABLE_ROW_ID   + ", " +
+//                TABLE_ROW_NAME + ", " +
+//                TABLE_ROW_BRAND  +
+//                " from " +
+//                TABLE_WINE + " WHERE " +
+//                TABLE_ROW_NAME + " = '" + name + "';";
+//
+//        Cursor c = db.rawQuery(query, null);
+//        return c;
+//    }
+
+
+
+//    ============================================================================================
+//    Helper Functions
+//    ============================================================================================
+
+    public String verifyCols(List<String> columnNames){
+        String contentCols = "";
+        for(int i = 0; i < columnNames.size(); i++){
+            // if(columnNames.get(i) in tableRowNames)
+            contentCols += columnNames.get(i) + ", ";
+        }
+        contentCols = contentCols.trim();
+        contentCols.substring(0, contentCols.length()-1);
+        return contentCols;
+    }
+    public String verifyContents(List<String> contents){
+        String contentVals = "";
+        for(int i = 0; i < contents.size(); i++){
+            contentVals += "'" + contents.get(i) + "'" + ", ";
+        }
+        contentVals = contentVals.trim();        
+        contentVals.substring(0, contentVals.length()-1);
+        return contentVals;
+    }
+
+
+    //    Find a specific record
+    public Cursor searchName (String name){
+        String query = "SELECT " +
+                TABLE_ROW_ID   + ", " +
+                TABLE_ROW_NAME + ", " +
+                TABLE_ROW_BRAND  +
+                " from " +
+                TABLE_WINE + " WHERE " +
+                TABLE_ROW_NAME + " = '" + name + "';";
+
+        Cursor c = db.rawQuery(query, null);
+        return c;
+    }
+
     //    Insert into DB
     public void insert (String name, String brand){
         String query = "INSERT INTO " + TABLE_WINE + " (" +
@@ -107,28 +206,7 @@ public class DataManager {
         // Execute command
         db.execSQL(query);
     }
-    //    Insert into DB
-    public void insertWine (Wine wine){
-        List<String> columnNames = new ArrayList<String>();
-        List<String> contents = new ArrayList<String>();
-//        columnNames.add(TABLE_ROW_ID);
-        columnNames.add(TABLE_ROW_NAME);
-        columnNames.add(TABLE_ROW_BRAND);
-//        columnNames.add(TABLE_ROW_RATING);
-        columnNames.add(TABLE_ROW_COST);
-//        columnNames.add(TABLE_ROW_COLOR);
 
-        // TODO: Cant set id (auto-incrementing)
-//        contents.add(wine.id().toString());
-        contents.add(wine.name());
-        contents.add(wine.brand());
-        // TODO: Rating field needs to be added
-//        wine.rating();
-        contents.add(Double.toString(wine.cost()));
-        // TODO: How to convert enum into String?
-//        wine.color();
-        insert_flex(columnNames, contents);
-    }
     //    Parse Flex command into DB
     public void parse_flex (String flexStr){
 
@@ -168,8 +246,8 @@ public class DataManager {
         contentCols = contentCols.trim();
         contentVals = contentVals.trim();
 
-        Log.i("Names: ", contentCols.substring(0, contentCols.length()-1));
-        Log.i("Contents: ", contentVals.substring(0, contentVals.length()-1));
+        // Log.i("Names: ", contentCols.substring(0, contentCols.length()-1));
+        // Log.i("Contents: ", contentVals.substring(0, contentVals.length()-1));
 
 
         query += contentCols.substring(0, contentCols.length()-1) + " ) "
@@ -183,19 +261,8 @@ public class DataManager {
         db.execSQL(query);
     }
 
-    //    Deletes an entry
-    public void delete(String name){
-        String query = "DELETE FROM " + TABLE_WINE +
-                " WHERE " + TABLE_ROW_NAME +
-                " = '" + name + "';";
-
-        Log.i("delete(); = ", query);
-        db.execSQL(query);
-    }
 
     public void checkCols(){
-//        Log.i("checking ", "derp");
-//        Cursor c = db.rawQuery("PRAGMA table_info(table_name);", null);
         Cursor dbCursor = db.query(TABLE_WINE,null,null,null,null,null,null);
         String[] columnNames = dbCursor.getColumnNames();
         String debug = "[";
@@ -208,23 +275,4 @@ public class DataManager {
     }
 
 
-    //    Get all the records
-    public Cursor selectAll() {
-        Cursor c = db.rawQuery("SELECT *" + " from " +
-                TABLE_WINE, null);
-        return c;
-    }
-    //    Find a specific record
-    public Cursor searchName (String name){
-        String query = "SELECT " +
-                TABLE_ROW_ID   + ", " +
-                TABLE_ROW_NAME + ", " +
-                TABLE_ROW_BRAND  +
-                " from " +
-                TABLE_WINE + " WHERE " +
-                TABLE_ROW_NAME + " = '" + name + "';";
-
-        Cursor c = db.rawQuery(query, null);
-        return c;
-    }
 }
