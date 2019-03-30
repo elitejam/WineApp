@@ -29,6 +29,18 @@
         android:hint="year"
         android:textColor="@android:color/black" />
 
+    <RatingBar
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="143dp"
+        android:numStars="5"
+        android:stepSize="1"
+        android:progressTint="@color/gold"
+        android:secondaryProgressTint="@color/gold"/>
+
     <Button
         android:id="@+id/addWineButton"
         android:layout_width="wrap_content"

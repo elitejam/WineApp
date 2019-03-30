@@ -1,15 +1,18 @@
 package com.example.wineapp;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 
@@ -35,6 +38,7 @@ public class AddWineFragment extends Fragment {
 
     private EditText nameEditText;
     private EditText yearEditText;
+    private RatingBar ratingRatingBar;
     private Button addWineButton;
 
     public AddWineFragment() {
@@ -76,17 +80,22 @@ public class AddWineFragment extends Fragment {
         nameEditText = rootView.findViewById(R.id.name);
         yearEditText = rootView.findViewById(R.id.year);
         yearEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        ratingRatingBar = rootView.findViewById(R.id.rating);
         addWineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = nameEditText.getText().toString();
                 String year = yearEditText.getText().toString();
+                String rating = String.valueOf(ratingRatingBar.getRating());
                 Toast.makeText(
                         getActivity(),
-                        "ADDING WINE: " + name + " " + year + " beep boop...",
+                        "ADDING WINE: " + name + " " + year + " " + rating + " stars beep boop...",
                         Toast.LENGTH_SHORT
                 ).show();
-
+                DataManager dataManager = new DataManager(getActivity());
+                dataManager.insert(name, "Secret Sauce");
+                showData(dataManager.selectAll());
+                getFragmentManager().popBackStack();
             }
         });
         return rootView;
@@ -116,6 +125,12 @@ public class AddWineFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        setRetainInstance(true);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -129,5 +144,13 @@ public class AddWineFragment extends Fragment {
     public interface OnAddWineListener {
         // TODO: Update argument type and name
         void onAddWine();
+    }
+
+    public void showData (Cursor c) {
+        while (c.moveToNext()){
+
+            Log.i("LOLOLOLOL" + c.getString(0), c.getString(1) + ", " + c.getString(2) + ", "
+                    + c.getString(3) + ", " + c.getString(4) + ", " + c.getString(5));
+        }
     }
 }
