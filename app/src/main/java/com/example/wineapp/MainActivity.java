@@ -69,7 +69,8 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.btnDebug:
                 Wine testWine = new Wine(0, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord", 9.0);
-                dm.insertWine(testWine);
+                Wine newWine = dm.insertWine(testWine);
+                Log.i("newWine: ", newWine.toString());
 //                dm.checkCols();
 //                showData(dm.checkCols());
 //                dm.parse_flex(debugField.getText().toString());

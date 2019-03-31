@@ -77,10 +77,10 @@ public class Wine {
     }
 
     /**
-     * ID setter; note, this is private (don't want just anybody to set this value)
+     * ID setter; Set by insert from DataManager
      * @param id new id
      */
-    private void id(int id) {
+    public void id(int id) {
         this.id = id;
     }
 

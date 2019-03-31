@@ -115,6 +115,8 @@ public Wine insertWine (Wine wine){
     contents.add(wine.color().toString());
     insert_flex(columnNames, contents);
 
+//    Log.i("last_id = ", Integer.toString(getLastId()));
+    wine.id(getLastId());
     return wine;
 }
 
@@ -176,6 +178,14 @@ public Wine insertWine (Wine wine){
         return contentVals;
     }
 
+    public int getLastId(){
+        String query = "SELECT last_insert_rowid()";
+
+        Cursor c = db.rawQuery(query, null);
+        c.moveToFirst();
+
+        return c.getInt(0);
+    }
 
     //    Find a specific record
     public Cursor searchName (String name){
