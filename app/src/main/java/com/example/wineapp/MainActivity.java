@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements
         dm = new DataManager(this);
 
         // TODO: delete this when not needed anymore
-        Wine testWine = new Wine(0, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord");
+        Wine testWine = new Wine(0, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord", 9.0);
         Log.i("Wine test", testWine.toString());
     }
 
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements
                 showData(dm.searchName(editSearch.getText().toString()));
                 break;
             case R.id.btnDebug:
-                Wine testWine = new Wine(0, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord");
+                Wine testWine = new Wine(0, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord", 9.0);
                 dm.insertWine(testWine);
 //                dm.checkCols();
 //                showData(dm.checkCols());

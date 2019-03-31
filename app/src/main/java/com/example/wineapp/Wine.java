@@ -24,6 +24,7 @@ public class Wine {
     private Color color;
     private double cost;
     private String grape_type; // could make enum?
+    private double rating;
 
     /**
      * Bare minimum constructor; other fields set to null
@@ -44,14 +45,16 @@ public class Wine {
      * @param color Color of the wine
      * @param cost Price of wine per bottle
      * @param grape_type Type of grape in wine
+     * @param rating 0.0-10.0 score for the wine
      */
-    Wine(int id, String name, String brand, Wine.Color color, double cost, String grape_type) {
+    Wine(int id, String name, String brand, Wine.Color color, double cost, String grape_type, double rating) {
         this.id(id);
         this.name(name);
         this.brand(brand);
         this.color(color);
         this.cost(cost);
         this.grape_type(grape_type);
+        this.rating(rating);
     }
 
     /**
@@ -161,19 +164,45 @@ public class Wine {
     }
 
     /**
+     * Rating type getter
+     * @return
+     */
+    public double rating() {
+        return this.rating;
+    }
+
+    /**
+     * Rating type setter and checks valid nums
+     * @param rating type of grape
+     */
+    public void rating(double rating) {
+        double minNum = 0.0;
+        double maxNum = 10.0;
+        if(rating < minNum || rating > maxNum){
+            // TODO: Throw Exception when value not between 0-10
+            this.rating = (rating > maxNum) ? maxNum : (rating < minNum) ? minNum : rating; 
+        }
+        else{
+            this.rating = rating;
+        }
+    }
+
+
+    /**
      * Convert Wine object to string; mainly for debug
      * @return string of wine debug info
      */
     public String toString() {
         return String.format(
                 Locale.ENGLISH,
-                "[ Wine # %d | name (%s), brand (%s), color (%s), cost (%.2f), grape_type (%s) ]",
+                "[ Wine # %d | name (%s), brand (%s), color (%s), cost (%.2f), grape_type (%s), rating (%.2f) ]",
                 this.id(),
                 this.name(),
                 this.brand(),
                 this.color(),
                 this.cost(),
-                this.grape_type()
+                this.grape_type(),
+                this.rating()
         );
     }
 }

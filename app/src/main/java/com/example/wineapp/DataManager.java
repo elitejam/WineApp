@@ -96,27 +96,26 @@ public class DataManager {
 //    ============================================================================================
 //    Required Functions
 //    ============================================================================================
+
 //    Insert into DB
-public void insertWine (Wine wine){
+// TODO: Return Wine with updated id field
+public Wine insertWine (Wine wine){
     List<String> columnNames = new ArrayList<String>();
     List<String> contents = new ArrayList<String>();
-//        columnNames.add(TABLE_ROW_ID);
     columnNames.add(TABLE_ROW_NAME);
     columnNames.add(TABLE_ROW_BRAND);
-//        columnNames.add(TABLE_ROW_RATING);
+       columnNames.add(TABLE_ROW_RATING);
     columnNames.add(TABLE_ROW_COST);
     columnNames.add(TABLE_ROW_COLOR);
 
-    // TODO: Cant set id (auto-incrementing)
-//        contents.add(wine.id().toString());
     contents.add(wine.name());
     contents.add(wine.brand());
-    // TODO: Rating field needs to be added
-//        wine.rating();
+    contents.add(Double.toString(wine.rating()));
     contents.add(Double.toString(wine.cost()));
-    // TODO: How to convert enum into String?
     contents.add(wine.color().toString());
     insert_flex(columnNames, contents);
+
+    return wine;
 }
 
     //    Deletes an entry
