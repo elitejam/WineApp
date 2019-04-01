@@ -13,6 +13,8 @@ import android.widget.EditText;
 
 import java.util.Locale;
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener,
@@ -65,7 +67,19 @@ public class MainActivity extends AppCompatActivity implements
                 showData(dm.selectAll());
                 break;
             case R.id.btnSearch:
-                showData(dm.searchName(editSearch.getText().toString()));
+                List<String> columnNames = new ArrayList<String>();
+                List<String> contents = new ArrayList<String>();
+                columnNames.add(dm.tableRowNames.get(1));
+                columnNames.add(dm.tableRowNames.get(5));
+                contents.add("Wet Garbage");
+                contents.add((Wine.Color.RED).toString());
+                List<Wine> wineList = dm.find(columnNames, contents);
+                String out = "";
+                for(int i = 0; i < wineList.size(); i++){
+                    out += wineList.get(i).toString() +  " // ";
+                }
+                Log.i("WineList: ", out);
+                //                showData(dm.searchName(editSearch.getText().toString()));
                 break;
             case R.id.btnDebug:
                 Wine testWine = new Wine(0, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord", 9.0);

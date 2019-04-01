@@ -98,7 +98,6 @@ public class DataManager {
 //    ============================================================================================
 
 //    Insert into DB
-// TODO: Return Wine with updated id field
 public Wine insertWine (Wine wine){
     List<String> columnNames = new ArrayList<String>();
     List<String> contents = new ArrayList<String>();
@@ -137,46 +136,60 @@ public Wine insertWine (Wine wine){
         return c;
     }
 
-//    //    Find a specific record
-//    public Cursor find (List<String> columnNames, List<String> contents){
+    //    Find a specific record
+    public List<Wine> find (List<String> columnNames, List<String> contents){
 
-//        String query = "SELECT " +
-//                TABLE_ROW_ID   + ", " +
-//                TABLE_ROW_NAME + ", " +
-//                TABLE_ROW_BRAND  +
-//                " from " +
-//                TABLE_WINE + " WHERE " +
-//                TABLE_ROW_NAME + " = '" + name + "';";
-//
-//        Cursor c = db.rawQuery(query, null);
-//        return c;
-//    }
+        String query = "SELECT * from " + TABLE_WINE + " WHERE ";
 
+        String contentCols = "";
+        String andOp = "' AND ";
+        int strLen = andOp.length()-1;
+        for(int i = 0; i < columnNames.size(); i++){
+            contentCols += columnNames.get(i) + " = '" + contents.get(i) + andOp;
+        }
+        contentCols = contentCols.substring(0, contentCols.length()-strLen);
 
+        query += contentCols + ";";
+
+        Cursor c = db.rawQuery(query, null);
+        return cursorToWineList(c);
+    }
+
+//    Takes full cursors and makes wine objects with it
+    public List<Wine> cursorToWineList (Cursor c){
+        List<Wine> wineList = new ArrayList<>();
+        while (c.moveToNext()){
+//            Gets String at specified column
+//            TODO: Add grapetype once that is included in DB
+            Wine wine = new Wine(c.getInt(0), c.getString(1), c.getString(2), Wine.Color.valueOf(c.getString(5)),c.getDouble(4), "", c.getDouble(3));
+            wineList.add(wine);
+        }
+        return wineList;
+    }
 
 //    ============================================================================================
 //    Helper Functions
 //    ============================================================================================
 
-    public String verifyCols(List<String> columnNames){
-        String contentCols = "";
-        for(int i = 0; i < columnNames.size(); i++){
-            // if(columnNames.get(i) in tableRowNames)
-            contentCols += columnNames.get(i) + ", ";
-        }
-        contentCols = contentCols.trim();
-        contentCols.substring(0, contentCols.length()-1);
-        return contentCols;
-    }
-    public String verifyContents(List<String> contents){
-        String contentVals = "";
-        for(int i = 0; i < contents.size(); i++){
-            contentVals += "'" + contents.get(i) + "'" + ", ";
-        }
-        contentVals = contentVals.trim();        
-        contentVals.substring(0, contentVals.length()-1);
-        return contentVals;
-    }
+//    public String verifyCols(List<String> columnNames){
+//        String contentCols = "";
+//        for(int i = 0; i < columnNames.size(); i++){
+//            // if(columnNames.get(i) in tableRowNames)
+//            contentCols += columnNames.get(i) + ", ";
+//        }
+//        contentCols = contentCols.trim();
+//        contentCols.substring(0, contentCols.length()-1);
+//        return contentCols;
+//    }
+//    public String verifyContents(List<String> contents){
+//        String contentVals = "";
+//        for(int i = 0; i < contents.size(); i++){
+//            contentVals += "'" + contents.get(i) + "'" + ", ";
+//        }
+//        contentVals = contentVals.trim();
+//        contentVals.substring(0, contentVals.length()-1);
+//        return contentVals;
+//    }
 
     public int getLastId(){
         String query = "SELECT last_insert_rowid()";
