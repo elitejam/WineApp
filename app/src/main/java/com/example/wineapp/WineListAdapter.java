@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineListEntry> {
-    private String[] dataset_;
+    private List<Wine> dataset_;
     private Context context_;
     private WineDetailFragment.OnDetailSelectListener handler_;
 
@@ -44,7 +46,7 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
     // ---------------------------------------------------------------------------------------------
     // RecyclerView implementation
     // ---------------------------------------------------------------------------------------------
-    public WineListAdapter(String[] data, Context context, WineDetailFragment.OnDetailSelectListener handler) {
+    public WineListAdapter(List<Wine> data, Context context, WineDetailFragment.OnDetailSelectListener handler) {
         this.dataset_ = data;
         this.context_ = context;
         this.handler_ = handler;
@@ -71,7 +73,7 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
     @Override
     public void onBindViewHolder(WineListEntry entry, int position) {
         // TODO: this will be more complicated when we use more than a TextView
-        entry.contents_.setText(this.dataset_[position]);
+        entry.contents_.setText(this.dataset_.get(position).toString());
 
         if (position % 2 == 1) {
             entry.contents_.setBackgroundColor(this.context_.getResources().getColor(R.color.colorWineListRowBackgroundDark));
@@ -82,6 +84,6 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
 
     @Override
     public int getItemCount() {
-        return this.dataset_.length;
+        return this.dataset_.size();
     }
 }

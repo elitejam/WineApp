@@ -17,8 +17,6 @@ import android.widget.TextView;
  * create an instance of this fragment.
  */
 public class WineDetailFragment extends Fragment {
-    private OnDetailSelectListener mListener;
-
     public WineDetailFragment() {
         // Required empty public constructor
     }
@@ -29,11 +27,11 @@ public class WineDetailFragment extends Fragment {
      *
      * @return A new instance of fragment WineDetailFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static WineDetailFragment newInstance(String info) {
+    public static WineDetailFragment newInstance(Wine info) {
         WineDetailFragment fragment = new WineDetailFragment();
+
         Bundle args = new Bundle();
-        args.putString("info", info);
+        args.putParcelable("wine", info);
 
         fragment.setArguments(args);
         return fragment;
@@ -50,13 +48,14 @@ public class WineDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.wine_detail, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_wine_detail, container, false);
 
         Bundle bundle = this.getArguments();
 
         if (bundle != null) {
             TextView info = rootView.findViewById(R.id.info);
-            info.setText(bundle.getString("info"));
+            Wine w = bundle.getParcelable("wine");
+            info.setText(w.toString());
         }
 
         return rootView;
@@ -65,18 +64,11 @@ public class WineDetailFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnDetailSelectListener) {
-            mListener = (OnDetailSelectListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override

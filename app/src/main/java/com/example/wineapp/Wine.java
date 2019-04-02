@@ -1,6 +1,8 @@
 package com.example.wineapp;
 
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.Locale;
 
@@ -9,7 +11,7 @@ import java.util.Locale;
  *
  * This class encapsulates the information stored per type of wine in the database.
  */
-public class Wine {
+public class Wine implements Parcelable {
     public enum Color {
         RED,
         WHITE,
@@ -187,7 +189,6 @@ public class Wine {
         }
     }
 
-
     /**
      * Convert Wine object to string; mainly for debug
      * @return string of wine debug info
@@ -204,5 +205,47 @@ public class Wine {
                 this.grape_type(),
                 this.rating()
         );
+    }
+
+    // ------------------------------------------------------------------------
+    // Parcelable interface implementation
+    // ------------------------------------------------------------------------
+    public static final Parcelable.Creator<Wine> CREATOR = new Parcelable.Creator<Wine>() {
+        public Wine createFromParcel(Parcel in) {
+            return new Wine(in);
+        }
+
+        public Wine[] newArray(int size) {
+            return new Wine[size];
+        }
+    };
+
+    public int describeContents() {
+        // return 0; most of the time
+        // return CONTENTS_FILE_DESCRIPTOR; if parcel contains a file handle
+        return 0;
+    }
+
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(this.id());
+        out.writeString(this.name());
+        out.writeString(this.brand());
+        out.writeInt(this.color().ordinal());
+        out.writeDouble(this.cost());
+        out.writeString(this.grape_type());
+        out.writeDouble(this.rating());
+    }
+
+    /**
+     * Private parcel constructor
+     */
+    private Wine(Parcel in) {
+        this.id(in.readInt());
+        this.name(in.readString());
+        this.brand(in.readString());
+        this.color(Color.values()[in.readInt()]);
+        this.cost(in.readDouble());
+        this.grape_type(in.readString());
+        this.rating(in.readDouble());
     }
 }
