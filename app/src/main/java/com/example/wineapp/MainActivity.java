@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
@@ -58,22 +59,15 @@ public class MainActivity extends AppCompatActivity implements
                 dm.insert(editName.getText().toString(), editAge.getText().toString());
                 break;
             case R.id.btnSelect:
-                showData(dm.selectAll());
+                dm.printWineList(dm.selectAll());
                 break;
             case R.id.btnSearch:
-                List<String> columnNames = new ArrayList<String>();
-                List<String> contents = new ArrayList<String>();
-                columnNames.add(dm.tableRowNames.get(1));
-                columnNames.add(dm.tableRowNames.get(5));
-                contents.add("Wet Garbage");
-                contents.add((Wine.Color.RED).toString());
-                List<Wine> wineList = dm.find(columnNames, contents);
-                String out = "";
-                for(int i = 0; i < wineList.size(); i++){
-                    out += wineList.get(i).toString() +  " // ";
-                }
-                Log.i("WineList: ", out);
-                //                showData(dm.searchName(editSearch.getText().toString()));
+                HashMap<String, String> wineRack = new HashMap<>();
+                wineRack.put(dm.TABLE_ROW_NAME, "Wet Garbage");
+                wineRack.put(dm.TABLE_ROW_COLOR, (Wine.Color.RED).toString());
+
+                List<Wine> wineList = dm.find(wineRack);
+                dm.printWineList(wineList);
                 break;
             case R.id.btnDebug:
                 Wine testWine = new Wine(0, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord", 9.0);
@@ -85,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements
 //                dm.parse_flex("name Chateau Berliquet 2015 // brand Bordeaux Red Blends // rating 4.5 // cost 39.99 // color Red");
                 break;
             case R.id.btnDelete:
-                dm.delete(editDelete.getText().toString());
+                Log.i("delete: ", Boolean.toString(dm.delete(Integer.parseInt(editDelete.getText().toString()))));
                 break;
             case R.id.databaseOpen:
                 loadDBLayout();
@@ -163,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements
         wineList.setLayoutManager(new LinearLayoutManagerScrollEnable(this));
 
         // reload wine dataset
-        this.data = this.dm.cursorToWineList(this.dm.selectAll());
+        this.data = this.dm.selectAll();
 
         // need wine list adapter (class that feeds list view information)
         wineListAdapter = new WineListAdapter(data, this, this);

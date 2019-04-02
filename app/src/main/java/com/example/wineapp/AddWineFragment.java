@@ -81,7 +81,7 @@ public class AddWineFragment extends Fragment {
                 ).show();
                 DataManager dataManager = new DataManager(getActivity());
                 dataManager.insert(name, "Secret Sauce");
-                showData(dataManager.selectAll());
+                dataManager.printWineList(dataManager.selectAll());
                 getFragmentManager().popBackStack();
             }
         });

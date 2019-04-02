@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DataManager {
@@ -41,18 +42,18 @@ public class DataManager {
 
         tableRowNames = new ArrayList<String>();
         tableRowProps = new ArrayList<String>();
-        tableRowNames.add(TABLE_ROW_ID);
-        tableRowProps.add(TABLE_ROW_ID_DEF);
-        tableRowNames.add(TABLE_ROW_NAME);
-        tableRowProps.add(TABLE_ROW_NAME_DEF);
-        tableRowNames.add(TABLE_ROW_BRAND);
-        tableRowProps.add(TABLE_ROW_BRAND_DEF);
-        tableRowNames.add(TABLE_ROW_RATING);
-        tableRowProps.add(TABLE_ROW_RATING_DEF);
-        tableRowNames.add(TABLE_ROW_COST);
-        tableRowProps.add(TABLE_ROW_COST_DEF);
-        tableRowNames.add(TABLE_ROW_COLOR);
-        tableRowProps.add(TABLE_ROW_COLOR_DEF);
+        tableRowNames.add(TABLE_ROW_ID);            // 0
+        tableRowProps.add(TABLE_ROW_ID_DEF);        // 0
+        tableRowNames.add(TABLE_ROW_NAME);          // 1
+        tableRowProps.add(TABLE_ROW_NAME_DEF);      // 1
+        tableRowNames.add(TABLE_ROW_BRAND);         // 2
+        tableRowProps.add(TABLE_ROW_BRAND_DEF);     // 2
+        tableRowNames.add(TABLE_ROW_RATING);        // 3
+        tableRowProps.add(TABLE_ROW_RATING_DEF);    // 3
+        tableRowNames.add(TABLE_ROW_COST);          // 4
+        tableRowProps.add(TABLE_ROW_COST_DEF);      // 4
+        tableRowNames.add(TABLE_ROW_COLOR);         // 5
+        tableRowProps.add(TABLE_ROW_COLOR_DEF);     // 5
         Log.i("Column size: ", Integer.toString(tableRowNames.size()));
 
         // Deletes the database so that it is always compatible
@@ -99,54 +100,69 @@ public class DataManager {
 
 //    Insert into DB
 public Wine insertWine (Wine wine){
-    List<String> columnNames = new ArrayList<String>();
-    List<String> contents = new ArrayList<String>();
-    columnNames.add(TABLE_ROW_NAME);
-    columnNames.add(TABLE_ROW_BRAND);
-       columnNames.add(TABLE_ROW_RATING);
-    columnNames.add(TABLE_ROW_COST);
-    columnNames.add(TABLE_ROW_COLOR);
+    HashMap<String, String> content = new HashMap<>();
+    content.put(TABLE_ROW_NAME, wine.name());
+    content.put(TABLE_ROW_BRAND, wine.brand());
+    content.put(TABLE_ROW_RATING, Double.toString(wine.rating()));
+    content.put(TABLE_ROW_COST, Double.toString(wine.cost()));
+    content.put(TABLE_ROW_COLOR, wine.color().toString());
 
-    contents.add(wine.name());
-    contents.add(wine.brand());
-    contents.add(Double.toString(wine.rating()));
-    contents.add(Double.toString(wine.cost()));
-    contents.add(wine.color().toString());
-    insert_flex(columnNames, contents);
+    insert_flex(content);
 
-//    Log.i("last_id = ", Integer.toString(getLastId()));
     wine.id(getLastId());
     return wine;
 }
 
-    //    Deletes an entry
-    public void delete(String name){
+    //    Deletes an entry and returns true if there was an entry and now it is deleted
+    public boolean delete(int id){
         String query = "DELETE FROM " + TABLE_WINE +
-                " WHERE " + TABLE_ROW_NAME +
-                " = '" + name + "';";
+                " WHERE " + TABLE_ROW_ID +
+                " = '" + id + "';";
 
         Log.i("delete(); = ", query);
-        db.execSQL(query);
+        HashMap<String, String> tempMap = new HashMap<String, String>();
+        tempMap.put(TABLE_ROW_ID, Integer.toString(id));
+        if(find(tempMap).size() > 0){
+            db.execSQL(query);
+            // Failed delete
+            if(find(tempMap).size() > 0){
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+        // Nothing to delete
+        else{
+            return false;
+        }
+        // TODO: Fix so i don't need to do two queries
     }
 
     //    Get all the records
-    public Cursor selectAll() {
+    public List<Wine> selectAll() {
         Cursor c = db.rawQuery("SELECT *" + " from " +
                 TABLE_WINE, null);
-        return c;
+        List<Wine> wineList = new ArrayList<>(); 
+        wineList = cursorToWineList(c);
+        return wineList;
     }
 
     //    Find a specific record
-    public List<Wine> find (List<String> columnNames, List<String> contents){
-
+    public List<Wine> find (HashMap<String, String> contents){
+        // List<String> columnNames, List<String> contents
         String query = "SELECT * from " + TABLE_WINE + " WHERE ";
 
         String contentCols = "";
         String andOp = "' AND ";
         int strLen = andOp.length()-1;
-        for(int i = 0; i < columnNames.size(); i++){
-            contentCols += columnNames.get(i) + " = '" + contents.get(i) + andOp;
+        // for(int i = 0; i < columnNames.size(); i++){
+        //     contentCols += columnNames.get(i) + " = '" + contents.get(i) + andOp;
+        // }
+        for(HashMap.Entry<String, String> entry : contents.entrySet()){
+            contentCols += entry.getKey() + " = '" + entry.getValue() + andOp;
         }
+
         contentCols = contentCols.substring(0, contentCols.length()-strLen);
 
         query += contentCols + ";";
@@ -167,6 +183,13 @@ public Wine insertWine (Wine wine){
         return wineList;
     }
 
+    public void printWineList(List<Wine> wineList){
+        String str = "";
+        for(int i = 0; i < wineList.size(); i++){
+            str += wineList.get(i).toString();
+        }
+        Log.i("Wine List: ", str);
+    }
 //    ============================================================================================
 //    Helper Functions
 //    ============================================================================================
@@ -252,19 +275,25 @@ public Wine insertWine (Wine wine){
         Log.i("Names: ", columnNames.toString());
         Log.i("Contents: ", contents.toString());
 
-        insert_flex(columnNames, contents);
+        // TODO: Fixme?
+        // insert_flex(columnNames, contents);
     }
 
     //    Insert into DB
-    public void insert_flex (List<String> columnNames, List<String> contents){
+    public void insert_flex (HashMap<String, String> contents){
         String query = "INSERT INTO " + TABLE_WINE + " ( ";
 
         String contentCols = "";
         String contentVals = "";
-        for(int i = 0; i < columnNames.size(); i++){
-            contentCols += columnNames.get(i) + ", ";
-            contentVals += "'" + contents.get(i) + "'" + ", ";
+        // for(int i = 0; i < contents.size(); i++){
+        //     contentCols += columnNames.get(i) + ", ";
+        //     contentVals += "'" + contents.get(i) + "'" + ", ";
+        // }
+        for(HashMap.Entry<String, String> entry : contents.entrySet()){
+            contentCols += entry.getKey() + ", ";
+            contentVals += "'" + entry.getValue() + "'" + ", ";
         }
+
         contentCols = contentCols.trim();
         contentVals = contentVals.trim();
 
