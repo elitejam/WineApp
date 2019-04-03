@@ -1,17 +1,16 @@
 package com.example.wineapp;
 
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements
 {
     private static final String TAG = "MainActivity";
     private List<Wine> data;
+    private RecyclerView.Adapter wineListAdapter;
 
 //==============================================
 //    For Database layout
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // *** wine list stuff ***
         RecyclerView wineList;
-        RecyclerView.Adapter wineListAdapter;
+        //RecyclerView.Adapter wineListAdapter;
 
         // create WineList recycle view
         wineList = findViewById(R.id.wineList);
@@ -160,9 +160,10 @@ public class MainActivity extends AppCompatActivity implements
         this.data = this.dm.selectAll();
 
         // need wine list adapter (class that feeds list view information)
-        wineListAdapter = new WineListAdapter(data, this, this);
+        this.wineListAdapter = new WineListAdapter(data, this, this);
         wineList.setAdapter(wineListAdapter);
     }
+
 
     /* Implement OnDetailSelectedListener for WineDetailFragment.
      *
