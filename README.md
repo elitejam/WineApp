@@ -2,6 +2,17 @@ WineApp
 =======
 Wine cataloging and rating app.
 
+TODO
+====
+
+**Single, User Wine App (view, add, remove Wine entries)**
+* MZ: implement filtering wine display by searching
+* MZ: add instant search results
+* MZ: implement batch select (on long click recycler list entry) + batch delete
+
+**Aesthetic Overhaul**
+* MZ: replace wine recyclerlist entries TextView with full Fragment
+
 Information
 ===========
 ### Bundle and Parcel (and Parcelable)
