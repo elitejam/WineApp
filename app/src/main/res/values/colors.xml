@@ -6,4 +6,6 @@
     <color name="colorWineListBackgroundLight">#E0E0E0</color>
     <color name="colorWineListRowBackgroundDark">#CBCBCB</color>
     <color name="gold">#FFD700</color>
+    <color name="colorRed">#7D002E</color>
+    <color name="colorLighterRed">#D30000</color>
 </resources>

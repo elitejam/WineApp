@@ -12,12 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineListEntry> {
     private List<Wine> dataset_;
     private Context context_;
     private WineDetailFragment.OnDetailSelectListener handler_;
+    private DataManager dm_;
 
     // ---------------------------------------------------------------------------------------------
     // Define the widget that goes in the Wine List recycler list view
@@ -25,11 +27,13 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
     public class WineListEntry extends RecyclerView.ViewHolder implements
             View.OnClickListener,
             View.OnLongClickListener {
+
         // TODO: use a string for now; switch to horizontal linear layout later?
+        private Wine wine_;
         private TextView contents_;
         private WineDetailFragment.OnDetailSelectListener handler_;
 
-        public WineListEntry(TextView v, WineDetailFragment.OnDetailSelectListener handler) {
+        WineListEntry(TextView v, WineDetailFragment.OnDetailSelectListener handler) {
             super(v);
             this.contents_ = v;
             this.handler_ = handler;
@@ -50,47 +54,61 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
 
         @Override
         public boolean onLongClick(View view) {
-            Toast.makeText(view.getContext(),
-                    "LONG CLICK!",
-                    Toast.LENGTH_LONG).show();
-            remove(view, this.getAdapterPosition());
+            if (BuildConfig.DEBUG && this.wine_ == null) {
+                throw new AssertionError();
+            }
+            WineListAdapter.this.remove(view, this.wine_.id(), this.getAdapterPosition());
             return false;
         }
-
-
     }
 
-
-    /* Private method to remove a wine entry from the list.
-     * TODO: Need to call delete from db with id.
-     * args:
-     *     View view: A view from the view holder.
-     *     int position: Position to remove from in adapter.
-     *
-     * returns:
-     *     boolean: Always false for now.
+    /**
+     * Tell this adapter to update the dataset and refresh the recycler list view
      */
-    private void remove(final View view, final int position) {
+    public void refresh() {
+        this.dataset_.clear();
+        this.dataset_ = this.dm_.selectAll();
+
+        this.notifyDataSetChanged();
+    }
+
+    /** Private method to remove a wine entry from the list.
+     * @param view A View object handle from the view holder
+     * @param position An integer wine id to specify which wine to remove
+     */
+    private void remove(final View view, final int wine_id, final int position) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
 
-        alertDialogBuilder.setMessage("Confirm remove?");
+        // if you make a final local variable, it will be captured by the alertDialogBuilder closure
+        final DataManager dm = this.dm_;
+
+        alertDialogBuilder.setMessage("Delete this wine?");
                 alertDialogBuilder.setPositiveButton("yes",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
-                                Toast.makeText(view.getContext(),
-                                        "You clicked yes!",
-                                        Toast.LENGTH_LONG).show();
+                                HashMap<String, String> q_params = new HashMap<>();
+                                q_params.put(DataManager.TABLE_ROW_ID, "" + wine_id);
+
+                                List<Wine> results = dm.find(q_params);
+                                if (BuildConfig.DEBUG && results.size() != 1) {
+                                    throw new AssertionError();
+                                }
+
+                                Toast.makeText(
+                                        view.getContext(),
+                                        "Wine #" + results.get(0).id() + ": \"" + results.get(0).name() + "\" removed.",
+                                        Toast.LENGTH_LONG
+                                ).show();
+
                                 dataset_.remove(position);
+                                dm.delete(wine_id);
                                 notifyItemRemoved(position);
                             }
                         });
         alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(view.getContext(),
-                        "You clicked no!",
-                        Toast.LENGTH_LONG).show();
                 dialog.dismiss();
             }
         });
@@ -102,10 +120,11 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
     // ---------------------------------------------------------------------------------------------
     // RecyclerView implementation
     // ---------------------------------------------------------------------------------------------
-    public WineListAdapter(List<Wine> data, Context context, WineDetailFragment.OnDetailSelectListener handler) {
+    public WineListAdapter(List<Wine> data, DataManager dm, Context context, WineDetailFragment.OnDetailSelectListener handler) {
         this.dataset_ = data;
         this.context_ = context;
         this.handler_ = handler;
+        this.dm_ = dm;
     }
 
     @Override
@@ -128,7 +147,8 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
 
     @Override
     public void onBindViewHolder(WineListEntry entry, int position) {
-        // TODO: this will be more complicated when we use more than a TextView
+        // set wine object
+        entry.wine_ = this.dataset_.get(position);
         entry.contents_.setText(this.dataset_.get(position).toString());
 
         if (position % 2 == 1) {

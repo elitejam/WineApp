@@ -56,6 +56,9 @@ public class WineDetailFragment extends Fragment {
             TextView info = rootView.findViewById(R.id.info);
             Wine w = bundle.getParcelable("wine");
             info.setText(w.toString());
+
+            // add Wine object to delete button
+            rootView.findViewById(R.id.wineDetailDeleteButton).setTag(w);
         }
 
         return rootView;

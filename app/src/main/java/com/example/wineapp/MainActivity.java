@@ -1,15 +1,19 @@
 package com.example.wineapp;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -63,10 +67,10 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.btnSearch:
                 HashMap<String, String> wineRack = new HashMap<>();
-                wineRack.put(dm.TABLE_ROW_NAME, "Wet Garbage");
-                wineRack.put(dm.TABLE_ROW_COLOR, (Wine.Color.RED).toString());
+                wineRack.put(DataManager.TABLE_ROW_NAME, "Wet Garbage");
+                wineRack.put(DataManager.TABLE_ROW_COLOR, (Wine.Color.RED).toString());
 
-                List<Wine> wineList = dm.find(wineRack);
+                final List<Wine> wineList = dm.find(wineRack);
                 dm.printWineList(wineList);
                 break;
             case R.id.btnDebug:
@@ -92,6 +96,54 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.backToMainViewButton:
                 loadMainLayout();
+                break;
+            case R.id.wineDetailDeleteButton:
+                // get wine object
+                final Wine w = (Wine) v.getTag();
+
+                // prompt for delete
+                final Context c = this;
+                final FragmentManager fm = this.getSupportFragmentManager();
+                final WineListAdapter wineListAdapter = (WineListAdapter) this.wineListAdapter;
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setMessage("Delete this wine?");
+
+                alertDialogBuilder.setPositiveButton("yes",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                // pop wine detail fragment off back-stack
+                                fm.popBackStack("WineDetail", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+                                // notify user
+                                Toast.makeText(
+                                        c,
+                                        "Wine #" + w.id() + ": \"" + w.name() + "\" removed.",
+                                        Toast.LENGTH_LONG
+                                ).show();
+
+                                // delete wine from database
+                                dm.delete(w.id());
+
+                                // update the recycler view dataset
+                                wineListAdapter.refresh();
+                            }
+                        }
+                );
+
+                alertDialogBuilder.setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
                 break;
             case R.id.addWineButton:
                 Log.w("MainActivity.onClick", "addWineButton NOT IMPLEMENTED!");
@@ -146,7 +198,6 @@ public class MainActivity extends AppCompatActivity implements
 
         // *** wine list stuff ***
         RecyclerView wineList;
-        //RecyclerView.Adapter wineListAdapter;
 
         // create WineList recycle view
         wineList = findViewById(R.id.wineList);
@@ -160,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements
         this.data = this.dm.selectAll();
 
         // need wine list adapter (class that feeds list view information)
-        this.wineListAdapter = new WineListAdapter(data, this, this);
+        this.wineListAdapter = new WineListAdapter(data, this.dm, this, this);
         wineList.setAdapter(wineListAdapter);
     }
 
@@ -174,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements
         WineDetailFragment detailFragment = WineDetailFragment.newInstance(info);
         getSupportFragmentManager().beginTransaction()
             .add(R.id.wineListContentWindow, detailFragment, "DetailFragment")
-            .addToBackStack(null)
+            .addToBackStack("WineDetail")
             .commit();
 
         Log.d(TAG, "onWineClick: " + info);

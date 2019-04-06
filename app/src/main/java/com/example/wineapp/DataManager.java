@@ -12,6 +12,7 @@ import java.util.List;
 
 public class DataManager {
     private SQLiteDatabase db;
+
     //    Row and Table Names used outside
     public static final String TABLE_ROW_ID         = "_id";
     public static final String TABLE_ROW_ID_DEF     = "integer primary key autoincrement not null";    
@@ -64,6 +65,7 @@ public class DataManager {
         db = helper.getWritableDatabase();
 
     }
+
     private class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
         public CustomSQLiteOpenHelper(Context context){
             super(context, DB_NAME, null, DB_VERSION);
