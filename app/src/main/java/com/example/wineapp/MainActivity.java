@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements
     Button btnSelect;
     Button btnSearch;
     Button btnDebug;
+    Button btnUpdate;
     EditText editName;
     EditText editAge;
     EditText editDelete;
@@ -70,13 +71,20 @@ public class MainActivity extends AppCompatActivity implements
                 dm.printWineList(wineList);
                 break;
             case R.id.btnDebug:
-                Wine testWine = new Wine(0, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord", 9.0);
+                Wine testWine = new Wine(1, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord", 9.0);
                 Wine newWine = dm.insertWine(testWine);
                 Log.i("newWine: ", newWine.toString());
 //                dm.checkCols();
 //                showData(dm.checkCols());
 //                dm.parse_flex(debugField.getText().toString());
 //                dm.parse_flex("name Chateau Berliquet 2015 // brand Bordeaux Red Blends // rating 4.5 // cost 39.99 // color Red");
+                break;
+            case R.id.btnUpdate:
+                HashMap<String, String> wineChange = new HashMap<>();
+                wineChange.put(dm.TABLE_ROW_NAME, "Dry Gaarboge");
+                wineChange.put(dm.TABLE_ROW_COLOR, (Wine.Color.AMBER).toString());
+                dm.update(0, wineChange);
+                Log.i("Completed", "");
                 break;
             case R.id.btnDelete:
                 Log.i("delete: ", Boolean.toString(dm.delete(Integer.parseInt(editDelete.getText().toString()))));
@@ -124,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements
         btnSelect = findViewById(R.id.btnSelect);
         btnSearch = findViewById(R.id.btnSearch);
         btnDebug = findViewById(R.id.btnDebug);
+        btnUpdate = findViewById(R.id.btnUpdate);
         btnReturnToMain = findViewById(R.id.returnToMain);
 
         editName   =  findViewById(R.id.editName);
@@ -138,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements
         btnDelete.setOnClickListener(this);
         btnSearch.setOnClickListener(this);
         btnDebug.setOnClickListener(this);
+        btnUpdate.setOnClickListener(this);
         btnReturnToMain.setOnClickListener(this);
     }
 

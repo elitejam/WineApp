@@ -143,7 +143,7 @@ public Wine insertWine (Wine wine){
     public List<Wine> selectAll() {
         Cursor c = db.rawQuery("SELECT *" + " from " +
                 TABLE_WINE, null);
-        List<Wine> wineList = new ArrayList<>(); 
+        List<Wine> wineList;
         wineList = cursorToWineList(c);
         return wineList;
     }
@@ -156,9 +156,6 @@ public Wine insertWine (Wine wine){
         String contentCols = "";
         String andOp = "' AND ";
         int strLen = andOp.length()-1;
-        // for(int i = 0; i < columnNames.size(); i++){
-        //     contentCols += columnNames.get(i) + " = '" + contents.get(i) + andOp;
-        // }
         for(HashMap.Entry<String, String> entry : contents.entrySet()){
             contentCols += entry.getKey() + " = '" + entry.getValue() + andOp;
         }
@@ -169,6 +166,23 @@ public Wine insertWine (Wine wine){
 
         Cursor c = db.rawQuery(query, null);
         return cursorToWineList(c);
+    }
+    // Updates an existing Wine entry
+    // TODO: Add return of success or not
+    public void update(int id, HashMap<String, String> propMap){
+
+        String query = "UPDATE " + TABLE_WINE + " SET ";
+        String contentStr = "";
+        for(HashMap.Entry<String, String> entry : propMap.entrySet()){
+            contentStr += entry.getKey() + " = '" + entry.getValue() + "', ";
+        }
+        Log.i("Wine List: ", contentStr);
+        contentStr = contentStr.substring(0, contentStr.length()-2);
+        Log.i("Wine List2: ", contentStr);
+
+        query += contentStr + " WHERE " + TABLE_ROW_ID + " = '" + Integer.toString(id) + "';";
+        Log.i("Query: ", query);
+        db.execSQL(query);
     }
 
 //    Takes full cursors and makes wine objects with it

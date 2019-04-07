@@ -78,7 +78,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editDelete"
-        android:hint="name to delete"
+        android:hint="id to delete"
+        android:inputType="number"
         android:layout_alignBottom="@+id/btnDelete"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -120,4 +121,15 @@
         android:layout_marginRight="0dp"
         android:layout_marginBottom="21dp"
         android:text="Debug" />
+    <Button
+        android:id="@+id/btnUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnDebug"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="21dp"
+        android:text="Update" />
 </RelativeLayout>
