@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.util.Log;
@@ -25,10 +26,16 @@ import android.widget.Toast;
  * create an instance of this fragment.
  */
 public class AddWineFragment extends Fragment {
+
+    private static final String TAG = "AddWineFragment";
+
     private OnAddWineListener mListener;
 
     private EditText nameEditText;
     private EditText yearEditText;
+    private EditText brandEditText;
+    private EditText costEditText;
+    private EditText grapeEditText;
     private RatingBar ratingRatingBar;
     private Button addWineButton;
 
@@ -65,13 +72,18 @@ public class AddWineFragment extends Fragment {
 
         addWineButton = rootView.findViewById(R.id.addWineButton);
         nameEditText = rootView.findViewById(R.id.name);
-        yearEditText = rootView.findViewById(R.id.year);
-        yearEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+//        yearEditText = rootView.findViewById(R.id.brand);
+//        yearEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        brandEditText = rootView.findViewById(R.id.brand);
+        costEditText = rootView.findViewById(R.id.cost);
+        costEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+
         ratingRatingBar = rootView.findViewById(R.id.rating);
         addWineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = nameEditText.getText().toString();
+                Log.d(TAG, name);
                 String year = yearEditText.getText().toString();
                 String rating = String.valueOf(ratingRatingBar.getRating());
                 Toast.makeText(
@@ -79,10 +91,20 @@ public class AddWineFragment extends Fragment {
                         "ADDING WINE: " + name + " " + year + " " + rating + " stars beep boop...",
                         Toast.LENGTH_SHORT
                 ).show();
-                DataManager dataManager = new DataManager(getActivity());
-                dataManager.insert(name, "Secret Sauce");
-                dataManager.printWineList(dataManager.selectAll());
+                Wine newWine = new Wine(
+                        1,
+                        name,
+                        "Yellowtail",
+                        Wine.Color.RED,
+                        5.22,
+                        "Concord",
+                        9.0
+                );
+                DataManager dm = ((MainActivity)getActivity()).dm;
+                dm.insertWine(newWine);
+                dm.printWineList(dm.selectAll());
                 getFragmentManager().popBackStack();
+                ((MainActivity)getActivity()).loadWineListLayout();
             }
         });
         return rootView;

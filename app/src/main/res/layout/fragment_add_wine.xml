@@ -19,14 +19,35 @@
         android:hint="name"/>
 
     <EditText
-        android:id="@+id/year"
+        android:id="@+id/brand"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginStart="16dp"
         android:layout_marginTop="66dp"
         android:layout_marginEnd="16dp"
-        android:hint="year"
+        android:hint="brand"
+        android:textColor="@android:color/black" />
+
+    <EditText
+        android:id="@+id/cost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="66dp"
+        android:layout_marginEnd="16dp"
+        android:hint="cost"
+        android:textColor="@android:color/black" />
+
+    <Spinner
+        android:id="@+id/grapeType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="66dp"
+        android:layout_marginEnd="16dp"
         android:textColor="@android:color/black" />
 
     <RatingBar

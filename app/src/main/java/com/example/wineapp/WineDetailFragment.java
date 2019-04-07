@@ -17,6 +17,9 @@ import android.widget.TextView;
  * create an instance of this fragment.
  */
 public class WineDetailFragment extends Fragment {
+
+    private static final String TAG = "WineDetailFragment";
+
     public WineDetailFragment() {
         // Required empty public constructor
     }

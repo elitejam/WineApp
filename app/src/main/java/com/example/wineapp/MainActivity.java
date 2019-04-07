@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // reload wine dataset
         this.data = this.dm.selectAll();
-
+        this.dm.printWineList((this.data));
         // need wine list adapter (class that feeds list view information)
         this.wineListAdapter = new WineListAdapter(data, this.dm, this, this);
         wineList.setAdapter(wineListAdapter);

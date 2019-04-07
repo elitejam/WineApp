@@ -8,4 +8,16 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="back_to_list">Back to List</string>
+
+    <string-array name="grapes_array">
+        <item>Cabernet Sauvignon</item>
+        <item>Pinot Noir</item>
+        <item>Merlot</item>
+        <item>Sauvignon Blanc</item>
+    </string-array>
+
+    <string-array name="colors_array">
+        <item>Red</item>
+        <item>White</item>
+    </string-array>
 </resources>
