@@ -11,9 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -35,7 +37,7 @@ public class AddWineFragment extends Fragment {
     private EditText yearEditText;
     private EditText brandEditText;
     private EditText costEditText;
-    private EditText grapeEditText;
+    private Spinner grapeSpinner;
     private RatingBar ratingRatingBar;
     private Button addWineButton;
 
@@ -71,43 +73,86 @@ public class AddWineFragment extends Fragment {
         View rootView =  inflater.inflate(R.layout.fragment_add_wine, container, false);
 
         addWineButton = rootView.findViewById(R.id.addWineButton);
+
         nameEditText = rootView.findViewById(R.id.name);
+
 //        yearEditText = rootView.findViewById(R.id.brand);
 //        yearEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+
         brandEditText = rootView.findViewById(R.id.brand);
+
         costEditText = rootView.findViewById(R.id.cost);
         costEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
+        // Drop down for grapes
+        final Spinner grapeSpinner = rootView.findViewById(R.id.grapeType);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.grapes_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        grapeSpinner.setPrompt("Grape Type");
+        grapeSpinner.setAdapter(adapter);
         ratingRatingBar = rootView.findViewById(R.id.rating);
+
+
+        /**
+         * Add wine to database ad refresh the wine list.
+         * @param View
+         */
         addWineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = nameEditText.getText().toString();
+
+                String brand = brandEditText.getText().toString();
+
+                double cost = 0;
+                // Check empty input.
+                if (costEditText.getText().toString().trim().length() != 0) {
+                    cost = Double.parseDouble(costEditText.getText().toString());
+                }
+
+                String grape = grapeSpinner.getSelectedItem().toString();
                 Log.d(TAG, name);
-                String year = yearEditText.getText().toString();
-                String rating = String.valueOf(ratingRatingBar.getRating());
-                Toast.makeText(
-                        getActivity(),
-                        "ADDING WINE: " + name + " " + year + " " + rating + " stars beep boop...",
-                        Toast.LENGTH_SHORT
-                ).show();
+//                String year = yearEditText.getText().toString();
+                double rating = ratingRatingBar.getRating();
+
                 Wine newWine = new Wine(
                         1,
                         name,
-                        "Yellowtail",
+                        brand,
                         Wine.Color.RED,
-                        5.22,
-                        "Concord",
-                        9.0
+                        cost,
+                        grape,
+                        rating
                 );
-                DataManager dm = ((MainActivity)getActivity()).dm;
-                dm.insertWine(newWine);
-                dm.printWineList(dm.selectAll());
-                getFragmentManager().popBackStack();
-                ((MainActivity)getActivity()).loadWineListLayout();
+
+                // Check for name input.
+                if (name.trim().length() == 0) {
+                    Toast.makeText(
+                            getContext(),
+                            "Please provide wine name.",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                } else {
+                    Toast.makeText(
+                            getContext(),
+                            "ADDING WINE: " + name + " " + rating + " stars beep boop...",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    DataManager dm = ((MainActivity) getActivity()).dm;
+                    dm.insertWine(newWine);
+                    dm.printWineList(dm.selectAll());
+                    getFragmentManager().popBackStack();
+                    ((MainActivity) getActivity()).loadWineListLayout();
+                }
             }
         });
+
         return rootView;
+    }
+
+    private boolean isEmpty(EditText editText) {
+        return editText.getText().toString().trim().length() == 0;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

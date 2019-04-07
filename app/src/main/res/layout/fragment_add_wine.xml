@@ -35,20 +35,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="66dp"
+        android:layout_marginTop="189dp"
         android:layout_marginEnd="16dp"
         android:hint="cost"
         android:textColor="@android:color/black" />
 
     <Spinner
         android:id="@+id/grapeType"
-        android:layout_width="match_parent"
+        android:layout_width="253dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="66dp"
+        android:layout_marginTop="147dp"
         android:layout_marginEnd="16dp"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:gravity="right"/>
 
     <RatingBar
         android:id="@+id/rating"
@@ -56,11 +57,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="143dp"
+        android:layout_marginTop="331dp"
         android:numStars="5"
-        android:stepSize="1"
         android:progressTint="@color/gold"
-        android:secondaryProgressTint="@color/gold"/>
+        android:secondaryProgressTint="@color/gold"
+        android:stepSize="1" />
 
     <Button
         android:id="@+id/addWineButton"
@@ -73,5 +74,15 @@
         android:layout_marginRight="28dp"
         android:layout_marginBottom="40dp"
         android:text="Add Wine" />
+
+    <TextView
+        android:id="@+id/grapeTypeText"
+        android:layout_width="78dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/grapeType"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="17dp"
+        android:text="Grape Type" />
 
 </RelativeLayout>
