@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         loadMainLayout();
-
         dm = new DataManager(this);
+        loadWineListLayout();
     }
 
     @Override
@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements
                 HashMap<String, String> wineChange = new HashMap<>();
                 wineChange.put(DataManager.TABLE_ROW_NAME, "Dry Gaarboge");
                 wineChange.put(DataManager.TABLE_ROW_COLOR, (Wine.Color.AMBER).toString());
-                dm.update(0, wineChange);
-                Log.i("Completed", "");
+                boolean success = dm.update(1, wineChange);
+                Log.i("Completed", Boolean.toString(success));
                 break;
             case R.id.btnDelete:
                 Log.i("delete: ", Boolean.toString(dm.delete(Integer.parseInt(editDelete.getText().toString()))));
@@ -100,7 +100,8 @@ public class MainActivity extends AppCompatActivity implements
                 loadMainLayout();
                 break;
             case R.id.showWineListButton:
-                loadWineListLayout();
+//                Layout will always be in view.
+//                loadWineListLayout();
                 break;
             case R.id.backToMainViewButton:
                 loadMainLayout();
