@@ -169,7 +169,7 @@ public class AddWineFragment extends Fragment {
             mListener = (OnAddWineListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement WineCardInteractionListener");
         }
     }
 

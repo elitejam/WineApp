@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.btnUpdate:
                 HashMap<String, String> wineChange = new HashMap<>();
-                wineChange.put(dm.TABLE_ROW_NAME, "Dry Gaarboge");
-                wineChange.put(dm.TABLE_ROW_COLOR, (Wine.Color.AMBER).toString());
+                wineChange.put(DataManager.TABLE_ROW_NAME, "Dry Gaarboge");
+                wineChange.put(DataManager.TABLE_ROW_COLOR, (Wine.Color.AMBER).toString());
                 dm.update(0, wineChange);
                 Log.i("Completed", "");
                 break;
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements
         this.data = this.dm.selectAll();
         this.dm.printWineList((this.data));
         // need wine list adapter (class that feeds list view information)
-        this.wineListAdapter = new WineListAdapter(data, this.dm, this, this);
+        this.wineListAdapter = new WineListAdapter(data, this.dm, this);
         wineList.setAdapter(wineListAdapter);
     }
 
