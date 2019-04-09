@@ -9,7 +9,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,15 +49,43 @@ public class MainActivity extends AppCompatActivity implements
     Button btnReturnToMain;
 //==============================================
 
-    Button btnDatabaseOpen;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        loadMainLayout();
         dm = new DataManager(this);
+
+        // TODO: remove this
+        // insert some test wines automatically
+        Wine w = new Wine(1, "Test Wine 1", "Whispering Angels", Wine.Color.ROSEE, 23.99, "Concord", 3.568);
+        dm.insertWine(w);
+
+        w = new Wine(1, "Test Wine 2", "V Sattui", Wine.Color.AMBER, 34.69, "Concord", 4.77);
+        dm.insertWine(w);
+
+        w = new Wine(1, "Test Wine 3", "Menage a Trois", Wine.Color.RED, 3.99, "Concord", 2.1);
+        dm.insertWine(w);
+
         loadWineListLayout();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (findViewById(R.id.actionbar_default) != null) {
+            getMenuInflater().inflate(R.menu.actionbar_default, menu);
+        } else if (findViewById(R.id.actionbar_database) != null) {
+            getMenuInflater().inflate(R.menu.actionbar_database, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.databaseOpen:
+                loadDBLayout();
+        }
+        return true;
     }
 
     @Override
@@ -75,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements
                 dm.printWineList(wineList);
                 break;
             case R.id.btnDebug:
-                Wine testWine = new Wine(1, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord", 9.0);
+                Wine testWine = new Wine(1, "Wet Garbage", "Yellowtail", Wine.Color.RED, 5.22, "Concord", 3.568);
                 Wine newWine = dm.insertWine(testWine);
                 Log.i("newWine: ", newWine.toString());
 //                dm.checkCols();
@@ -93,18 +124,8 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.btnDelete:
                 Log.i("delete: ", Boolean.toString(dm.delete(Integer.parseInt(editDelete.getText().toString()))));
                 break;
-            case R.id.databaseOpen:
-                loadDBLayout();
-                break;
             case R.id.returnToMain:
-                loadMainLayout();
-                break;
-            case R.id.showWineListButton:
-//                Layout will always be in view.
-//                loadWineListLayout();
-                break;
-            case R.id.backToMainViewButton:
-                loadMainLayout();
+                loadWineListLayout();
                 break;
             case R.id.wineDetailDeleteButton:
                 // get wine object
@@ -171,14 +192,12 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    public void loadMainLayout(){
-        setContentView(R.layout.activity_main);
-        btnDatabaseOpen = findViewById(R.id.databaseOpen);
-        btnDatabaseOpen.setOnClickListener(this);
-    }
-
     public void loadDBLayout(){
         setContentView(R.layout.database_entry);
+
+        Toolbar actionbar = findViewById(R.id.actionbar_database);
+        setSupportActionBar(actionbar);
+
         // get a reference to the UI item
         btnInsert = findViewById(R.id.btnInsert);
         btnDelete = findViewById(R.id.btnDelete);
@@ -207,6 +226,9 @@ public class MainActivity extends AppCompatActivity implements
     public void loadWineListLayout() {
         setContentView(R.layout.wine_list);
 
+        Toolbar actionbar = findViewById(R.id.actionbar_default);
+        setSupportActionBar(actionbar);
+
         // *** wine list stuff ***
         RecyclerView wineList;
 
@@ -221,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements
         // reload wine dataset
         this.data = this.dm.selectAll();
         this.dm.printWineList((this.data));
+
         // need wine list adapter (class that feeds list view information)
         this.wineListAdapter = new WineListAdapter(data, this.dm, this);
         wineList.setAdapter(wineListAdapter);
@@ -232,6 +255,10 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onDetailSelected(int wine_id) {
+        // hack: refresh dataset before reading from it
+        // NOTE: commenting this line might cause crash after delete
+        this.data = this.dm.selectAll();
+
         Wine info = this.data.get(wine_id);
         WineDetailFragment detailFragment = WineDetailFragment.newInstance(info);
         getSupportFragmentManager().beginTransaction()

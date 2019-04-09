@@ -8,6 +8,8 @@
     <string name="null_name">[NO NAME]</string>
     <string name="null_brand">[NO BRAND]</string>
 
+    <string name="action_debug">debug</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="back_to_list">Back to List</string>

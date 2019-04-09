@@ -12,6 +12,13 @@ TODO
 
 Information
 ===========
+### App/Action bar
+
+You can customize the little bar that goes on top of the app.
+
+[Add The App Bar --- https://developer.android.com/training/appbar/index.html](https://developer.android.com/training/appbar/index.html)
+[Set Up the App Bar --- https://developer.android.com/training/appbar/setting-up.html](https://developer.android.com/training/appbar/setting-up.html)
+
 ### Bundle and Parcel (and Parcelable)
 Bundle is a Android interface that let's you add PODs (primitive data types) and objects that implement Parcelable into some transferable object for passing between fragments and activies and stuff. A Parcel is similar to a Bundle in that it's a class that lets you marshall (i.e. serialize, but without the implication that it's being written/read to a string).
 

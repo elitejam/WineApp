@@ -151,7 +151,7 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
         else                                brand.setText(entry.wine_.brand());
 
         cost.setText(String.format(Locale.ENGLISH, "$%.2f", entry.wine_.cost()));
-        rating.setRating((float) (entry.wine_.rating() / 2.f)); // rating is out of 10 in db?
+        rating.setRating((float) (entry.wine_.rating()));
     }
 
     @Override
