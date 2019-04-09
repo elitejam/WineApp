@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements
     private List<Wine> data;
     private RecyclerView.Adapter wineListAdapter;
 
+    private int curr_wine_pos;
+
 //==============================================
 //    For Database layout
     // For all our buttons and edit text
@@ -115,6 +117,9 @@ public class MainActivity extends AppCompatActivity implements
                 final FragmentManager fm = this.getSupportFragmentManager();
                 final WineListAdapter wineListAdapter = (WineListAdapter) this.wineListAdapter;
 
+//                boolean removed = wineListAdapter.remove(v, w.id(), curr_wine_pos);
+//                fm.popBackStack("WineDetail", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
                 alertDialogBuilder.setMessage("Delete this wine?");
 
@@ -136,7 +141,11 @@ public class MainActivity extends AppCompatActivity implements
                                 dm.delete(w.id());
 
                                 // update the recycler view dataset
-                                wineListAdapter.refresh();
+//                                wineListAdapter.refresh();
+                                wineListAdapter.dataset_.remove(curr_wine_pos);
+                                wineListAdapter.notifyItemRemoved(curr_wine_pos);
+                                wineListAdapter.notifyItemRangeChanged(curr_wine_pos, wineListAdapter.getItemCount());
+                                wineListAdapter.notifyDataSetChanged();
                             }
                         }
                 );
@@ -232,7 +241,9 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onDetailSelected(int wine_id) {
+        curr_wine_pos = wine_id;
         Wine info = this.data.get(wine_id);
+
         WineDetailFragment detailFragment = WineDetailFragment.newInstance(info);
         getSupportFragmentManager().beginTransaction()
             .add(R.id.wineListContentWindow, detailFragment, "DetailFragment")

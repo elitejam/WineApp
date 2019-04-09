@@ -60,7 +60,7 @@ public class DataManager {
 
         // Deletes the database so that it is always compatible
 //        TODO: Remove when database is more stable
-        context.deleteDatabase(DB_NAME);
+//        context.deleteDatabase(DB_NAME);
 //        Create an instance of the SQLiteHelper
         CustomSQLiteOpenHelper helper = new CustomSQLiteOpenHelper(context);
         db = helper.getWritableDatabase();
