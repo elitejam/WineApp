@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         loadMainLayout();
-
         dm = new DataManager(this);
+        loadWineListLayout();
     }
 
     @Override
@@ -100,7 +100,8 @@ public class MainActivity extends AppCompatActivity implements
                 loadMainLayout();
                 break;
             case R.id.showWineListButton:
-                loadWineListLayout();
+//                Layout will always be in view.
+//                loadWineListLayout();
                 break;
             case R.id.backToMainViewButton:
                 loadMainLayout();
