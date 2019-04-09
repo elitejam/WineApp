@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements
                 HashMap<String, String> wineChange = new HashMap<>();
                 wineChange.put(dm.TABLE_ROW_NAME, "Dry Gaarboge");
                 wineChange.put(dm.TABLE_ROW_COLOR, (Wine.Color.AMBER).toString());
-                dm.update(0, wineChange);
-                Log.i("Completed", "");
+                boolean success = dm.update(1, wineChange);
+                Log.i("Completed", Boolean.toString(success));
                 break;
             case R.id.btnDelete:
                 Log.i("delete: ", Boolean.toString(dm.delete(Integer.parseInt(editDelete.getText().toString()))));
