@@ -171,7 +171,7 @@ public Wine insertWine (Wine wine){
     }
     // Updates an existing Wine entry
     // TODO: Add return of success or not
-    public void update(int id, HashMap<String, String> propMap){
+    public boolean update(int id, HashMap<String, String> propMap){
 
         String query = "UPDATE " + TABLE_WINE + " SET ";
         String contentStr = "";
@@ -185,6 +185,8 @@ public Wine insertWine (Wine wine){
         query += contentStr + " WHERE " + TABLE_ROW_ID + " = '" + Integer.toString(id) + "';";
         Log.i("Query: ", query);
         db.execSQL(query);
+
+        return true;
     }
 
 //    Takes full cursors and makes wine objects with it
