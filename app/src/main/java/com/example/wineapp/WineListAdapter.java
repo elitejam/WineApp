@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineListEntry> {
-    private List<Wine> dataset_;
+    public List<Wine> dataset_;
     private WineDetailFragment.OnDetailSelectListener handler_;
     private DataManager dm_;
 
@@ -46,6 +48,7 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
         @Override
         public void onClick(View view) {
             // pass the click event onto the provided handler
+//            Log.i("click() = ", Integer.toString(this.getAdapterPosition()));
             this.handler_.onDetailSelected(this.getAdapterPosition());
         }
 
@@ -73,11 +76,12 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
      * @param view A View object handle from the view holder
      * @param position An integer wine id to specify which wine to remove
      */
-    private void remove(final View view, final int wine_id, final int position) {
+    public void remove(final View view, final int wine_id, final int position) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
 
         // if you make a final local variable, it will be captured by the alertDialogBuilder closure
         final DataManager dm = this.dm_;
+//        Log.i("pos: ", Integer.toString(position));
 
         alertDialogBuilder.setMessage("Delete this wine?");
                 alertDialogBuilder.setPositiveButton("yes",
@@ -101,6 +105,9 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
                                 dataset_.remove(position);
                                 dm.delete(wine_id);
                                 notifyItemRemoved(position);
+                                notifyItemRangeChanged(position, getItemCount());
+                                notifyDataSetChanged();
+
                             }
                         });
         alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
