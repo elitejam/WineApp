@@ -59,6 +59,12 @@ public class AddWineFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Called to do initial creation of a fragment. Called after onAttach() and before
+     * onCreateView(LayoutInflater, ViewGroup, Bundle).
+     *
+     * @params A bundle savedInstanceState.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +72,14 @@ public class AddWineFragment extends Fragment {
         }
     }
 
+    /**
+     * Called when it's time for the fragment to draw its UI for the first time.
+     *
+     * @params A LayoutInflater that will inflate the fragment's view. A ViewGroup for the
+     * fragment UI to attach to. A Bundle if non-null will allow the fragment to save its state.
+     *
+     * @return A View that is the root of the fragment's layout.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,18 +100,17 @@ public class AddWineFragment extends Fragment {
 
         // Drop down for grapes
         final Spinner grapeSpinner = rootView.findViewById(R.id.grapeType);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.grapes_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                getContext(),
+                R.array.grapes_array,
+                android.R.layout.simple_spinner_item
+        );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         grapeSpinner.setPrompt("Grape Type");
         grapeSpinner.setAdapter(adapter);
         ratingRatingBar = rootView.findViewById(R.id.rating);
 
-
-        /**
-         * Add wine to database ad refresh the wine list.
-         * @param View
-         */
+        //Add wine to database and refresh the wine list.
         addWineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,6 +156,9 @@ public class AddWineFragment extends Fragment {
                     dm.insertWine(newWine);
                     dm.printWineList(dm.selectAll());
                     getFragmentManager().popBackStack();
+                    /** TODO: This will reload the list from the db. Would it be better
+                     *  to update the list directly? e.g. list.add(wine) adapter.notifyDataSetChanged().
+                     */
                     ((MainActivity) getActivity()).loadWineListLayout();
                 }
             }
@@ -151,17 +167,23 @@ public class AddWineFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Checks if an EditText object only contains an empty String.
+     *
+     * @params EditText editText.
+     *
+     * @return True if EditText is an empty String. False otherwise.
+     */
     private boolean isEmpty(EditText editText) {
         return editText.getText().toString().trim().length() == 0;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onAddWine();
-        }
-    }
-
+    /**
+     * Called when fragment is first attached to its context. onCreate(Bundle) will be called
+     * after.
+     *
+     * @params Context context.
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -173,12 +195,19 @@ public class AddWineFragment extends Fragment {
         }
     }
 
+    /**
+     * Called when the fragment is no longer attached to its activity. Called after onDestroy().
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
+    /**
+     * Called when the fragment is no longer in use. Called after onStop() and before
+     * onDetach().
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -200,11 +229,4 @@ public class AddWineFragment extends Fragment {
         void onAddWine();
     }
 
-    public void showData (Cursor c) {
-        while (c.moveToNext()){
-
-            Log.i("LOLOLOLOL" + c.getString(0), c.getString(1) + ", " + c.getString(2) + ", "
-                    + c.getString(3) + ", " + c.getString(4) + ", " + c.getString(5));
-        }
-    }
 }

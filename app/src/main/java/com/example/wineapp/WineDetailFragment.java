@@ -40,6 +40,12 @@ public class WineDetailFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Called to do initial creation of a fragment. Called after onAttach() and before
+     * onCreateView(LayoutInflater, ViewGroup, Bundle).
+     *
+     * @params A bundle savedInstanceState.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +53,14 @@ public class WineDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * Called when it's time for the fragment to draw its UI for the first time.
+     *
+     * @params A LayoutInflater that will inflate the fragment's view. A ViewGroup for the
+     * fragment UI to attach to. A Bundle if non-null will allow the fragment to save its state.
+     *
+     * @return A View that is the root of the fragment's layout.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,16 +81,29 @@ public class WineDetailFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Called when fragment is first attached to its context. onCreate(Bundle) will be called
+     * after.
+     *
+     * @params Context context.
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
     }
 
+    /**
+     * Called when the fragment is no longer attached to its activity. Called after onDestroy().
+     */
     @Override
     public void onDetach() {
         super.onDetach();
     }
 
+    /**
+     * Called when the fragment is no longer in use. Called after onStop() and before
+     * onDetach().
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
