@@ -3,9 +3,11 @@ package com.example.wineapp;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -16,9 +18,14 @@ import android.widget.TextView;
  * Use the {@link WineDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WineDetailFragment extends Fragment {
+public class WineDetailFragment extends Fragment
+    implements UpdateWineFragment.OnUpdateWineListener {
 
     private static final String TAG = "WineDetailFragment";
+
+    private Wine wine;
+
+    private Button updateWineButton;
 
     public WineDetailFragment() {
         // Required empty public constructor
@@ -50,18 +57,27 @@ public class WineDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_wine_detail, container, false);
 
-        Bundle bundle = this.getArguments();
+        updateWineButton = rootView.findViewById(R.id.wineDetailUpdateButton);
+        updateWineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onUpdateWine(wine);
+            }
+        });
+                Bundle bundle = this.getArguments();
 
         if (bundle != null) {
             TextView info = rootView.findViewById(R.id.info);
-            Wine w = bundle.getParcelable("wine");
-            info.setText(w.toString());
+            this.wine = bundle.getParcelable("wine");
+            info.setText(this.wine.toString());
 
             // add Wine object to delete button
-            rootView.findViewById(R.id.wineDetailDeleteButton).setTag(w);
+            rootView.findViewById(R.id.wineDetailDeleteButton).setTag(wine);
         }
 
         return rootView;
@@ -80,6 +96,16 @@ public class WineDetailFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onUpdateWine(Wine wine) {
+        Log.d(TAG, "UPDATE WINE FRAGMENT");
+        UpdateWineFragment updateWineFragment = UpdateWineFragment.newInstance(wine);
+        getFragmentManager().beginTransaction()
+                .add(R.id.wineDetailContents, updateWineFragment, "UpdateWineFragment")
+                .addToBackStack("UpdateWineFragment")
+                .commit();
     }
 
     /**
