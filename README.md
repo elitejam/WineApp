@@ -10,11 +10,15 @@ TODO
 * MZ: add instant search results
 * MZ: implement batch select (on long click recycler list entry) + batch delete
 
-**Aesthetic Overhaul**
-* MZ: replace wine recyclerlist entries TextView with full Fragment
-
 Information
 ===========
+### App/Action bar
+
+You can customize the little bar that goes on top of the app.
+
+[Add The App Bar --- https://developer.android.com/training/appbar/index.html](https://developer.android.com/training/appbar/index.html)
+[Set Up the App Bar --- https://developer.android.com/training/appbar/setting-up.html](https://developer.android.com/training/appbar/setting-up.html)
+
 ### Bundle and Parcel (and Parcelable)
 Bundle is a Android interface that let's you add PODs (primitive data types) and objects that implement Parcelable into some transferable object for passing between fragments and activies and stuff. A Parcel is similar to a Bundle in that it's a class that lets you marshall (i.e. serialize, but without the implication that it's being written/read to a string).
 
@@ -41,3 +45,21 @@ b.putParcelable("wine", w); // first arg is a string key
 Bundle bundle = this.getArguments();
 Wine w = bundle.getParcelable("wine");
 ```
+
+### RecyclerList and CardView
+
+A RecyclerList/RecyclerView is a new container that is used to display large lists of items. Each entry ("ViewHolder") in this recycler list consists of one of more View objects. Android provides a view object called a "CardView" that is for displaying information in flash card type format (think Google Feed).
+
+##### Links:
+
+[RecyclerList + CardView --- https://www.binpress.com/android-recyclerview-cardview-guide](https://www.binpress.com/android-recyclerview-cardview-guide/)
+
+##### Usage:
+
+Some useful tips are to create a fragment with a CardView inside. (Make sure the CardView's height is wrap_content and not match_parent.) Then inside OnBindViewHolder inside the recycler view adapter, inflate the fragment, attach it to the provided parent ViewGroup and populate with model information.
+
+### Adding an Image asset
+
+As of the time of this writing (April 8, 2019), importing an image into Android Studio using the GUI results in a blank image. This stack overflow question says to manually copy the desired image in the res/drawable\* folders and refresh the project if necessary.
+
+[Adding Images --- https://stackoverflow.com/questions/34367464/android-when-attempting-to-add-an-image-creates-a-blank-image](https://stackoverflow.com/questions/34367464/android-when-attempting-to-add-an-image-creates-a-blank-image)

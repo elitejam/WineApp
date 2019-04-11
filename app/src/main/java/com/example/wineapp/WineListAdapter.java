@@ -1,23 +1,23 @@
 package com.example.wineapp;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineListEntry> {
-    private List<Wine> dataset_;
-    private Context context_;
+    public List<Wine> dataset_;
     private WineDetailFragment.OnDetailSelectListener handler_;
     private DataManager dm_;
 
@@ -28,12 +28,11 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
             View.OnClickListener,
             View.OnLongClickListener {
 
-        // TODO: use a string for now; switch to horizontal linear layout later?
         private Wine wine_;
-        private TextView contents_;
+        private View contents_;
         private WineDetailFragment.OnDetailSelectListener handler_;
 
-        WineListEntry(TextView v, WineDetailFragment.OnDetailSelectListener handler) {
+        WineListEntry(View v, WineDetailFragment.OnDetailSelectListener handler) {
             super(v);
             this.contents_ = v;
             this.handler_ = handler;
@@ -49,6 +48,7 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
         @Override
         public void onClick(View view) {
             // pass the click event onto the provided handler
+//            Log.i("click() = ", Integer.toString(this.getAdapterPosition()));
             this.handler_.onDetailSelected(this.getAdapterPosition());
         }
 
@@ -76,11 +76,12 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
      * @param view A View object handle from the view holder
      * @param position An integer wine id to specify which wine to remove
      */
-    private void remove(final View view, final int wine_id, final int position) {
+    public void remove(final View view, final int wine_id, final int position) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(view.getContext());
 
         // if you make a final local variable, it will be captured by the alertDialogBuilder closure
         final DataManager dm = this.dm_;
+//        Log.i("pos: ", Integer.toString(position));
 
         alertDialogBuilder.setMessage("Delete this wine?");
                 alertDialogBuilder.setPositiveButton("yes",
@@ -104,6 +105,9 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
                                 dataset_.remove(position);
                                 dm.delete(wine_id);
                                 notifyItemRemoved(position);
+                                notifyItemRangeChanged(position, getItemCount());
+                                notifyDataSetChanged();
+
                             }
                         });
         alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
@@ -120,43 +124,41 @@ public class WineListAdapter extends RecyclerView.Adapter<WineListAdapter.WineLi
     // ---------------------------------------------------------------------------------------------
     // RecyclerView implementation
     // ---------------------------------------------------------------------------------------------
-    public WineListAdapter(List<Wine> data, DataManager dm, Context context, WineDetailFragment.OnDetailSelectListener handler) {
+    public WineListAdapter(List<Wine> data, DataManager dm, WineDetailFragment.OnDetailSelectListener handler) {
         this.dataset_ = data;
-        this.context_ = context;
         this.handler_ = handler;
         this.dm_ = dm;
     }
 
     @Override
     public WineListAdapter.WineListEntry onCreateViewHolder(ViewGroup parent, int viewType) {
-        // apparently the view has to be created outside the view-holder...
-        TextView v = new TextView(parent.getContext());
-
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-
-        v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f);
-        v.setPadding(10, 20, 10, 15);
-        v.setLayoutParams(p);
-        v.setTypeface(Typeface.MONOSPACE);
-
-        return new WineListEntry(v, this.handler_);
+        // use the WineCardFragment
+        View wineCard = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_wine_list_card, parent, false);
+        return new WineListEntry(wineCard, this.handler_);
     }
 
     @Override
     public void onBindViewHolder(WineListEntry entry, int position) {
         // set wine object
         entry.wine_ = this.dataset_.get(position);
-        entry.contents_.setText(this.dataset_.get(position).toString());
 
-        if (position % 2 == 1) {
-            entry.contents_.setBackgroundColor(this.context_.getResources().getColor(R.color.colorWineListRowBackgroundDark));
-        } else {
-            entry.contents_.setBackgroundColor(this.context_.getResources().getColor(R.color.colorWineListBackgroundLight));
+        if (BuildConfig.DEBUG && entry.wine_ == null) {
+            throw new AssertionError();
         }
 
+        TextView name = entry.contents_.findViewById(R.id.wineCard_name);
+        TextView brand = entry.contents_.findViewById(R.id.wineCard_brand);
+        TextView cost = entry.contents_.findViewById(R.id.wineCard_cost);
+        RatingBar rating = entry.contents_.findViewById(R.id.wineCard_rating);
+
+        if (entry.wine_.name() == null)     name.setText(R.string.null_name);
+        else                                name.setText(entry.wine_.name());
+
+        if (entry.wine_.brand() == null)   brand.setText(R.string.null_brand);
+        else                                brand.setText(entry.wine_.brand());
+
+        cost.setText(String.format(Locale.ENGLISH, "$%.2f", entry.wine_.cost()));
+        rating.setRating((float) (entry.wine_.rating()));
     }
 
     @Override

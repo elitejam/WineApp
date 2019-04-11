@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity"
+    >
+    <!-- Go to DB debug layout (always in overflow) -->
+    <item
+        android:id="@+id/databaseOpen"
+        android:icon="@drawable/actionbar_debug_button_icon"
+        android:title="@string/action_debug"
+        app:showAsAction="ifRoom" />
+</menu>
