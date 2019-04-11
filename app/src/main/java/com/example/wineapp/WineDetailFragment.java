@@ -63,9 +63,9 @@ public class WineDetailFragment extends Fragment
     /**
      * Called when it's time for the fragment to draw its UI for the first time.
      *
-     * @params A LayoutInflater that will inflate the fragment's view. A ViewGroup for the
-     * fragment UI to attach to. A Bundle if non-null will allow the fragment to save its state.
-     *
+     * @param LayoutInflater inflater that will inflate the fragment's view.
+     * @param ViewGroup container for the fragment UI to attach to.
+     * @param Bundle savedInstanceState if non-null will allow the fragment to save its state.
      * @return A View that is the root of the fragment's layout.
      */
     @Override
@@ -101,7 +101,7 @@ public class WineDetailFragment extends Fragment
      * Called when fragment is first attached to its context. onCreate(Bundle) will be called
      * after.
      *
-     * @params Context context.
+     * @param Context context.
      */
     @Override
     public void onAttach(Context context) {

@@ -52,6 +52,12 @@ public class UpdateWineFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Called to do initial creation of a fragment. Called after onAttach() and before
+     * onCreateView(LayoutInflater, ViewGroup, Bundle).
+     *
+     * @param Bundle savedInstanceState.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,10 +66,17 @@ public class UpdateWineFragment extends Fragment {
         }
     }
 
+    /**
+     * Called when it's time for the fragment to draw its UI for the first time.
+     *
+     * @param LayoutInflater inflater that will inflate the fragment's view.
+     * @param ViewGroup container for the fragment UI to attach to.
+     * @param Bundle savedInstanceState if non-null will allow the fragment to save its state.
+     * @return A View that is the root of the fragment's layout.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_update_wine, container, false);
         wineName = rootView.findViewById(R.id.wineName);
@@ -75,7 +88,7 @@ public class UpdateWineFragment extends Fragment {
         // Make sure a bundle is received.
         if (bundle != null) {
             final Wine wine = bundle.getParcelable("wine");
-            wineName.setText(wine.name());
+            wineName.setText("Wine name: " + wine.name());
             final int id = wine.id();
 
             updateButton.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +116,12 @@ public class UpdateWineFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Called when fragment is first attached to its context. onCreate(Bundle) will be called
+     * after.
+     *
+     * @param Context context.
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -115,6 +134,9 @@ public class UpdateWineFragment extends Fragment {
 //        }
     }
 
+    /**
+     * Called when the fragment is no longer attached to its activity. Called after onDestroy().
+     */
     @Override
     public void onDetach() {
         super.onDetach();
